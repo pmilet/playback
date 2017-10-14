@@ -9,24 +9,24 @@ namespace pmilet.Playback
 { 
     public static class PlaybackExtension
     {
-        public static void AddIberfabricFakeFactory(this IServiceCollection services, Type fakefactory)
+        public static void AddFakeFactory(this IServiceCollection services, Type fakefactory)
         {
             services.AddScoped(typeof(IFakeFactory),fakefactory);
         }
 
-        public static void AddIberfabricPlayback(this IServiceCollection services)
+        public static void AddPlayback(this IServiceCollection services)
         {
             services.AddScoped<IPlaybackContext, PlaybackContext>();
             services.AddScoped<IPlaybackStorageService, PlaybackBlobStorageService>();
         }
 
-        public static void AddIberfabricPlayback(this IServiceCollection services, IConfigurationRoot configuration)
+        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.AddScoped<IPlaybackContext, PlaybackContext>();
             services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
         }
 
-        public static IApplicationBuilder UseIberfabricPlayback(this IApplicationBuilder builder)
+        public static IApplicationBuilder UsePlayback(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<PlaybackMiddleware>();
         }

@@ -1,4 +1,3 @@
-C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\pmilet.Playback.csprojResolveAssemblyReference.cache
 C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\pmilet.Playback.csproj.CoreCompileInputs.cache
 C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\pmilet.Playback.AssemblyInfo.cs
 C:\code\pmilet\playback\src\pmilet.Playback\bin\Debug\net461\Iberfabric.Playback.dll
@@ -77,3 +76,4 @@ C:\code\pmilet\playback\src\pmilet.Playback\bin\Debug\net461\System.Spatial.reso
 C:\code\pmilet\playback\src\pmilet.Playback\bin\Debug\net461\Iberfabric.Playback.Core.dll
 C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\Iberfabric.Playback.dll
 C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\Iberfabric.Playback.pdb
+C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\net461\pmilet.Playback.csprojResolveAssemblyReference.cache

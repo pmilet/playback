@@ -26,7 +26,7 @@ namespace pmilet.Playback
 
         public async Task Invoke(HttpContext httpContext)
         {
-            _playbackContext.Read(httpContext, "Usuario" );
+            _playbackContext.Read(httpContext, "PlaybackContext" );
 
             httpContext.Request.EnableRewind();
             switch (_playbackContext.PlayBackMode)

@@ -17,15 +17,23 @@ namespace pmilet.Playback
             {
                 operation.Parameters = new List<IParameter>();
             }
-            
+
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlayBackMode",
+                Name = "PlaybackContext",
+                In = "header",
+                Required = false,
+                Type = "string",
+                Description = "PlayBack context info to be applied to request"
+            });
+            operation.Parameters.Add(new NonBodyParameter
+            {
+                Name = "PlaybackMode",
                 In = "header",
                 Required = false,
                 Type = "string",
                 Enum = Enum.GetNames(typeof(PlaybackMode)),
-                Description = "Indica la forma en la que se tratará la petición"
+                Description = "PlayBack mode to determine how to handle the request"
             });
             operation.Parameters.Add(new NonBodyParameter
             {
@@ -33,9 +41,9 @@ namespace pmilet.Playback
                 In = "header",
                 Required = false,
                 Type = "string",
-                Description = "Id que permite reproducir una mensaje previamente grabado"
+                Description = "Playback Identifier to be able to retrieve a request for replaying"
             });
-            
+
         }
     }
 }
