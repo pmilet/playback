@@ -9,7 +9,7 @@ namespace pmilet.Playback.Core
 {
     public enum PlaybackMode
     {
-        Real,
+        None,
         Grabacion,
         Playback,
         PlaybackReal,

@@ -24,7 +24,7 @@ namespace ApiGateway.Controllers
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
         public string Get(int id)
         {
-            return "value";
+            return $"value {id}";
         }
 
         // POST api/values

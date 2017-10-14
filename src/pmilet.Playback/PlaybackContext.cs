@@ -38,7 +38,7 @@ namespace pmilet.Playback
             keyfound = _context.Request.Headers.TryGetValue("PlayBackMode", out headerValues);
             if (keyfound)
             {
-                PlaybackMode pbm = PlaybackMode.Real;
+                PlaybackMode pbm = PlaybackMode.None;
                 Enum.TryParse<PlaybackMode>(headerValues.FirstOrDefault(), out pbm);
                 PlayBackMode = pbm;
             }

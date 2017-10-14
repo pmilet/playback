@@ -28,7 +28,7 @@ namespace pmilet.Playback
         {
             var section = configuration.GetSection("PlaybackStorage");
             _connectionString = section.GetSection("ConnectionString").Value;
-            _containerName = section.GetSection("ContainerName").Value;
+            _containerName = section.GetSection("Name").Value;
         }
 
         public async Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0)
@@ -88,11 +88,6 @@ namespace pmilet.Playback
                     break;
             }
             return fileInfo.BodyString;
-        }
-
-        private Task WaitFor(object responseTime)
-        {
-            throw new NotImplementedException();
         }
 
         private async Task WaitFor(long responseTime)
