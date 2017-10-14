@@ -2,51 +2,6 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.6.1": {
-      "Iberfabric.Exceptions.Core/1.0.0-ci-20170619-080136": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net461/Iberfabric.Exceptions.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net461/Iberfabric.Exceptions.Core.dll": {}
-        }
-      },
-      "Iberfabric.Playback.Core/1.0.0-ci-20170912-101250": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore": "1.0.0"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net461/Iberfabric.Playback.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net461/Iberfabric.Playback.Core.dll": {}
-        }
-      },
       "Libuv/1.9.2": {
         "type": "package",
         "dependencies": {
@@ -1619,20 +1574,6 @@
           "WebActivatorEx": "2.0.0"
         }
       },
-      "Swashbuckle.AspNetCore/1.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "1.0.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "1.0.0"
-        },
-        "compile": {
-          "lib/net451/Swashbuckle.AspNetCore.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Swashbuckle.AspNetCore.dll": {}
-        }
-      },
       "Swashbuckle.AspNetCore.Swagger/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -2648,10 +2589,11 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6.1",
         "dependencies": {
-          "Iberfabric.Exceptions.Core": "1.0.0-ci-20170619-080136",
-          "Iberfabric.Playback.Core": "1.0.0-ci-20170912-101250",
+          "Microsoft.AspNetCore": "1.1.3",
           "Microsoft.AspNetCore.WebUtilities": "1.1.2",
           "Newtonsoft.Json": "10.0.3",
+          "Swashbuckle.AspNetCore.Swagger": "1.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0",
           "WindowsAzure.Storage": "8.1.4"
         },
         "compile": {
@@ -2663,51 +2605,6 @@
       }
     },
     ".NETFramework,Version=v4.6.1/win7-x86": {
-      "Iberfabric.Exceptions.Core/1.0.0-ci-20170619-080136": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net461/Iberfabric.Exceptions.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net461/Iberfabric.Exceptions.Core.dll": {}
-        }
-      },
-      "Iberfabric.Playback.Core/1.0.0-ci-20170912-101250": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore": "1.0.0"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net461/Iberfabric.Playback.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net461/Iberfabric.Playback.Core.dll": {}
-        }
-      },
       "Libuv/1.9.2": {
         "type": "package",
         "dependencies": {
@@ -4257,20 +4154,6 @@
           "WebActivatorEx": "2.0.0"
         }
       },
-      "Swashbuckle.AspNetCore/1.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "1.0.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "1.0.0"
-        },
-        "compile": {
-          "lib/net451/Swashbuckle.AspNetCore.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Swashbuckle.AspNetCore.dll": {}
-        }
-      },
       "Swashbuckle.AspNetCore.Swagger/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -5192,10 +5075,11 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6.1",
         "dependencies": {
-          "Iberfabric.Exceptions.Core": "1.0.0-ci-20170619-080136",
-          "Iberfabric.Playback.Core": "1.0.0-ci-20170912-101250",
+          "Microsoft.AspNetCore": "1.1.3",
           "Microsoft.AspNetCore.WebUtilities": "1.1.2",
           "Newtonsoft.Json": "10.0.3",
+          "Swashbuckle.AspNetCore.Swagger": "1.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0",
           "WindowsAzure.Storage": "8.1.4"
         },
         "compile": {
@@ -5208,28 +5092,6 @@
     }
   },
   "libraries": {
-    "Iberfabric.Exceptions.Core/1.0.0-ci-20170619-080136": {
-      "sha512": "UksINs87K+lwscSAmQs2XyM1Gf/ZZtLn3CwC14+hvEBu3yK3PdmQItI9zkXcHe9OR6CJYaUZNdT86bFiz4t1zQ==",
-      "type": "package",
-      "path": "iberfabric.exceptions.core/1.0.0-ci-20170619-080136",
-      "files": [
-        "iberfabric.exceptions.core.1.0.0-ci-20170619-080136.nupkg.sha512",
-        "iberfabric.exceptions.core.nuspec",
-        "lib/net452/Iberfabric.Exceptions.Core.dll",
-        "lib/net461/Iberfabric.Exceptions.Core.dll"
-      ]
-    },
-    "Iberfabric.Playback.Core/1.0.0-ci-20170912-101250": {
-      "sha512": "p6JcwQZMaOID99lnwTxfZY7Yv7GJ5nb86mH4YmIVZZ5oEPJx6NBZ641xnEUl/0B4dPN3QtA0lWSgSKCQ1yzx9Q==",
-      "type": "package",
-      "path": "iberfabric.playback.core/1.0.0-ci-20170912-101250",
-      "files": [
-        "iberfabric.playback.core.1.0.0-ci-20170912-101250.nupkg.sha512",
-        "iberfabric.playback.core.nuspec",
-        "lib/net452/Iberfabric.Playback.Core.dll",
-        "lib/net461/Iberfabric.Playback.Core.dll"
-      ]
-    },
     "Libuv/1.9.2": {
       "sha512": "O4dIlYSaLebMzN+h6B2RAai6/yEuep1yMM6ePF/WW1aqWEkSr32lv/krpo5wdEZDaND8kPT3GXCOYpL7mz9zYA==",
       "type": "package",
@@ -6690,17 +6552,6 @@
         "Content/App_Start/SwaggerConfig.cs.pp",
         "swashbuckle.5.6.0.nupkg.sha512",
         "swashbuckle.nuspec"
-      ]
-    },
-    "Swashbuckle.AspNetCore/1.0.0": {
-      "sha512": "pYppc+iPifsAYUWi+UoblnjFkUtfP9RZfj5JQaUmEgiWRz5RsCcIuKHvNCGG5AojVKfgjWC4naUPJx4fCjqvDg==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore/1.0.0",
-      "files": [
-        "lib/net451/Swashbuckle.AspNetCore.dll",
-        "lib/netstandard1.6/Swashbuckle.AspNetCore.dll",
-        "swashbuckle.aspnetcore.1.0.0.nupkg.sha512",
-        "swashbuckle.aspnetcore.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore.Swagger/1.0.0": {
@@ -10360,7 +10211,8 @@
       "Microsoft.AspNetCore >= 1.1.3",
       "Microsoft.AspNetCore.Mvc >= 1.1.4",
       "Microsoft.Extensions.Logging.Debug >= 1.1.2",
-      "Swashbuckle >= 5.6.0"
+      "Swashbuckle >= 5.6.0",
+      "Swashbuckle.AspNetCore.SwaggerUi >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -10416,6 +10268,10 @@
           "Microsoft.Extensions.Logging.Debug": {
             "target": "Package",
             "version": "1.1.2"
+          },
+          "Swashbuckle.AspNetCore.SwaggerUi": {
+            "target": "Package",
+            "version": "1.0.0"
           },
           "Microsoft.AspNetCore.Mvc": {
             "target": "Package",

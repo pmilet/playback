@@ -10,10 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iberfabric.Exceptions.Core" Version="1.0.0-ci-20170619-080136" />
-    <PackageReference Include="Iberfabric.Playback.Core" Version="1.0.0-ci-20170912-101250" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.1.4" />
   </ItemGroup>
 

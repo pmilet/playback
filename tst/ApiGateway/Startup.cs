@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,14 +27,17 @@ namespace ApiGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddControllersAsServices();
+            services.AddPlayback(Configuration);
+            services.AddFakeFactory<MyPlaybackFakeFactory>();
+            services.AddScoped<MyServiceProxy, MyServiceProxy>();
+
             // Add framework services.
-            services.AddMvc();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
             });
-            services.AddPlayback(Configuration);
-            services.AddFakeFactory(typeof(MyFakeFactory));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,9 +45,10 @@ namespace ApiGateway
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            app.UsePlayback();
+
             app.UseSwagger();
             app.UseSwaggerUI(c=> c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
+            app.UsePlayback();
             app.UseMvc();
         }
     }

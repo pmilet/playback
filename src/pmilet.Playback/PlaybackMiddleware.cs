@@ -1,4 +1,6 @@
-﻿using pmilet.Playback.Core;
+﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+using pmilet.Playback.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System;
@@ -11,10 +13,10 @@ namespace pmilet.Playback
 {
     public class PlaybackMiddleware 
     {
-        private IFakeFactory _fakeFactory;
-        private IPlaybackStorageService _messageStorageService;
+        private readonly IFakeFactory _fakeFactory;
+        private readonly IPlaybackStorageService _messageStorageService;
         protected readonly RequestDelegate _next;
-        private IPlaybackContext _playbackContext;
+        private readonly IPlaybackContext _playbackContext;
 
         public PlaybackMiddleware(RequestDelegate next, IFakeFactory fakeFactory, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)            
         {
@@ -26,10 +28,10 @@ namespace pmilet.Playback
 
         public async Task Invoke(HttpContext httpContext)
         {
-            _playbackContext.Read(httpContext, "PlaybackContext" );
+            _playbackContext.Read(httpContext );
 
             httpContext.Request.EnableRewind();
-            switch (_playbackContext.PlayBackMode)
+            switch (_playbackContext.PlaybackMode)
             {
                 case PlaybackMode.Fake:
                     _fakeFactory.GenerateFakeResponse(httpContext);
@@ -38,7 +40,7 @@ namespace pmilet.Playback
                     break;
                 case PlaybackMode.Grabacion:
                     var pathDecode = WebUtility.UrlDecode(httpContext.Request.Path);
-                    await _messageStorageService.UploadToStorageAsync(_playbackContext.PlaybackId, pathDecode, httpContext.Request.QueryString.Value, _playbackContext.RequestBody);
+                    await _messageStorageService.UploadToStorageAsync(_playbackContext.PlaybackId, pathDecode, httpContext.Request.QueryString.Value, _playbackContext.Content);
                     httpContext.Request.Body.Position = 0;
                     httpContext.Response.OnStarting(state => {
                         var httpContextState = (HttpContext)state;

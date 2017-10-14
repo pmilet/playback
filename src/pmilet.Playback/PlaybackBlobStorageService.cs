@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
@@ -66,6 +68,16 @@ namespace pmilet.Playback
             }
         }
 
+        public async Task UploadToStorageAsync(string fileId, string content, long elapsedTime = 0)
+        {
+            await UploadToStorageAsync(fileId, "", "", content, elapsedTime);
+        }
+
+        public async Task<T> ReplayFromStorageAsync<T>(PlaybackMode playbackMode, string playbackId)
+        {
+            string value = await ReplayFromStorageAsync(playbackMode, playbackId);
+            return JsonConvert.DeserializeObject<T>( value);
+        }
 
         public async Task<string> ReplayFromStorageAsync(PlaybackMode playbackMode, string playbackId)
         {
@@ -139,5 +151,7 @@ namespace pmilet.Playback
                 throw new StorageException(errorMessage, ex);
             }
         }
+
+        
     }
 }

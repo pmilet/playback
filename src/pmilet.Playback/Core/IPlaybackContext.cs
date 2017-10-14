@@ -8,10 +8,8 @@ namespace pmilet.Playback.Core
     public interface IPlaybackContext
     {
         string PlaybackId { get; }
-        PlaybackMode PlayBackMode { get; }
-        string ContextInfo{ get; set; }
-        string RequestBody { get; }
-        void Read(HttpContext context, string contextInfoHeader);
-
+        PlaybackMode PlaybackMode { get; }
+        void Read(HttpContext context);
+        string Content { get; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using pmilet.Playback;
+﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+using pmilet.Playback;
 using pmilet.Playback.Core;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -17,10 +19,17 @@ namespace pmilet.Playback
             {
                 operation.Parameters = new List<IParameter>();
             }
-
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlaybackContext",
+                Name = "PlaybackVersion",
+                In = "header",
+                Required = false,
+                Type = "string",
+                Description = "PlayBack version to determine wich version to retrieve"
+            });
+            operation.Parameters.Add(new NonBodyParameter
+            {
+                Name = "PlaybackRequestContext",
                 In = "header",
                 Required = false,
                 Type = "string",
