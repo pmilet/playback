@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>pmilet.Playback.Core</id>
+    <version>1.0.0</version>
+    <title>pmilet Playback.Core</title>
+    <authors>Pierre Milet</authors>
+    <owners>Pierre Milet</owners>
+    <licenseUrl></licenseUrl>
+    <projectUrl>https://github.com/pmilet/playback</projectUrl>
+    <iconUrl></iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Playback.Core</description>
+    <releaseNotes>First release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Asp.NetCore Playback Replay</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\**\pmilet.Playback.Core.dll" target="lib" />
+  </files>
+</package>
