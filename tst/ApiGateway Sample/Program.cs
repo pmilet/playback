@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace ApiGateway
+namespace ApiGateway_Sample
 {
     public class Program
     {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using pmilet.Playback;
 
-namespace ApiGateway
+namespace ApiGateway_Sample
 {
     public class Startup
     {
@@ -28,11 +28,12 @@ namespace ApiGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddControllersAsServices();
+            
             services.AddPlayback(Configuration);
+
             services.AddFakeFactory<MyPlaybackFakeFactory>();
             services.AddScoped<MyServiceProxy, MyServiceProxy>();
 
-            // Add framework services.
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
@@ -48,7 +49,9 @@ namespace ApiGateway
 
             app.UseSwagger();
             app.UseSwaggerUI(c=> c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
+
             app.UsePlayback();
+
             app.UseMvc();
         }
     }

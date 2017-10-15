@@ -13,14 +13,14 @@ namespace pmilet.Playback
         private readonly IFakeFactory _fakeFactory;
         private readonly IPlaybackStorageService _messageStorageService;
         protected readonly RequestDelegate _next;
-        private readonly IPlaybackContext _playbackContext;
+        private readonly PlaybackContext _playbackContext;
 
         public PlaybackMiddleware(RequestDelegate next, IFakeFactory fakeFactory, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)            
         {
             _fakeFactory = fakeFactory;
             _messageStorageService = messageStorageService;
             _next = next;
-            _playbackContext = playbackContext;
+            _playbackContext = playbackContext as PlaybackContext;
         }
 
         public async Task Invoke(HttpContext httpContext)

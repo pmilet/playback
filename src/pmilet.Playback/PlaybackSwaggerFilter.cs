@@ -21,7 +21,7 @@ namespace pmilet.Playback
             }
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlaybackVersion",
+                Name = "X-Playback-Version",
                 In = "header",
                 Required = false,
                 Type = "string",
@@ -29,7 +29,7 @@ namespace pmilet.Playback
             });
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlaybackRequestContext",
+                Name = "X-Playback-RequestContext",
                 In = "header",
                 Required = false,
                 Type = "string",
@@ -37,7 +37,7 @@ namespace pmilet.Playback
             });
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlaybackMode",
+                Name = "X-Playback-Mode",
                 In = "header",
                 Required = false,
                 Type = "string",
@@ -46,7 +46,7 @@ namespace pmilet.Playback
             });
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "PlaybackId",
+                Name = "X-Playback-Id",
                 In = "header",
                 Required = false,
                 Type = "string",

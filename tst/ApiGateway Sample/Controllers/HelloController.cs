@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 
-namespace ApiGateway.Controllers
+namespace ApiGateway_Sample
 {
     [Route("api/[controller]")]
     public class HelloController : Controller
@@ -26,8 +26,8 @@ namespace ApiGateway.Controllers
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
         public async Task<string> Get()
         {
-            var v = await _serviceProxy.Execute(new MyServiceRequest() { Command = "Get" });
-            return v.Response;
+            var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = "Get" });
+            return v.Output;
         }
 
         // GET api/values/5
@@ -36,8 +36,8 @@ namespace ApiGateway.Controllers
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
         public async Task<string> Get(string name)
         {
-            var v = await _serviceProxy.Execute(new MyServiceRequest() { Command = $"Get {name}" });
-            return v.Response;
+            var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = $"Get {name}" });
+            return v.Output;
         }
 
         // POST api/values
