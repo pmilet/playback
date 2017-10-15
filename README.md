@@ -39,9 +39,9 @@ This interface simplifies the saving and replaying of any Api outgoing call resp
             });
 
         }
-'''
+```
 
-'''csharp        
+```csharp        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             ...
@@ -53,7 +53,7 @@ This interface simplifies the saving and replaying of any Api outgoing call resp
       
             ...
         }
-'''
+```
 
 Configure playback storage settings. The only supported playback storage service (for the moment) is Azure Blob Storage.
 A Storage connection string and container name should be provided.
@@ -66,12 +66,12 @@ Add this section to appsettings.json file
   
  Decorate your api method with the PlaybackSwaggerFilter
  
- '''csharp
+ ```csharp
   [HttpGet]
         [SwaggerOperation("Hello")]
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
         public async Task<string> Get()
- '''
+ ```
 
 Test it:
 1. Navigate to your swagger UI and select and api method to execute
@@ -82,7 +82,7 @@ Test it:
 
 ## Use case 2 : has a developer i want to fake my api responses in order to design my api contract quickly.
  
- '''csharp
+ ```csharp
     public void ConfigureServices(IServiceCollection services)
     {
         ...
@@ -91,11 +91,11 @@ Test it:
 
         ...
     }
- '''
+ ```
  
 Implement your fake factory for example like this...
        
- '''csharp
+ ```csharp
     public class MyPlaybackFakeFactory : FakeFactoryBase
     {
         public override void GenerateFakeResponse(HttpContext context)
@@ -117,7 +117,7 @@ Implement your fake factory for example like this...
         {
             return "Hello FAKE";
         }
-'''
+```
 
 Test it:
 1. Navigate to your swagger UI and select and api method to execute
@@ -130,7 +130,7 @@ Test it:
 
 Implement your service proxy leveraging the IPlaybackContext interface to record and replay your service outgoing responses:
 
-'''csharp
+```csharp
    public class MyServiceProxy
    {
         IPlaybackContext _playbackContext;
@@ -153,4 +153,4 @@ Implement your service proxy leveraging the IPlaybackContext interface to record
             return result;
         }
     }
-'''
+```
