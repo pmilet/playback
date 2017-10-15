@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
 using pmilet.Playback.Core;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace pmilet.Playback
 {
@@ -101,7 +102,7 @@ namespace pmilet.Playback
 
         internal void GenerateNewPlaybackId()
         {
-            PlaybackId =  ContextInfo + "_" + _assemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode;
+            PlaybackId = WebUtility.UrlEncode(ContextInfo + "_" + _assemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode);
         }
 
         internal string Content
@@ -127,7 +128,7 @@ namespace pmilet.Playback
         private string RequestPath
         {
             //TODO: check
-            get { return _context.Request.Path.Value.Replace("api", "").Trim('/'); }
+            get { return WebUtility.UrlEncode(_context.Request.Path.Value.Replace("api", "").Trim('/')); }
         }
 
         private string Version

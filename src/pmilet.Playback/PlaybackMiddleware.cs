@@ -63,7 +63,7 @@ namespace pmilet.Playback
             httpContext.Response.OnStarting(state =>
             {
                 var httpContextState = (HttpContext)state;
-                httpContextState.Response.Headers.Add("PlaybackId", new[] { _playbackContext.PlaybackId });
+                httpContextState.Response.Headers.Add("X-Playback-Id", new[] { _playbackContext.PlaybackId });
                 return Task.FromResult(0);
             }, httpContext);
             await _next.Invoke(httpContext);

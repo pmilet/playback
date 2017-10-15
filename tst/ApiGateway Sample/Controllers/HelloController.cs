@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using pmilet.Playback;
 using System.Threading.Tasks;
-using pmilet.Playback.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 
 namespace ApiGateway_Sample
 {

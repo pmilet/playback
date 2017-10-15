@@ -16,17 +16,6 @@ namespace ApiGateway_Sample
 
     public class MyPlaybackFakeFactory : FakeFactoryBase
     {
-        private string HelloGet(string request)
-        {
-            return "Hello FAKE";
-        }
-
-        private string HelloPost(HelloRequest request)
-        {
-            var name = !string.IsNullOrEmpty(request.Name) ? request.Name : "Whoever";
-            return "Hello " + name + " FAKE";
-        }
-
         public override void GenerateFakeResponse(HttpContext context)
         {
             switch (context.Request.Path.Value.ToLower())
@@ -42,5 +31,16 @@ namespace ApiGateway_Sample
             }
         }
 
-          }
+        private string HelloGet(string request)
+        {
+            return "Hello FAKE";
+        }
+
+        private string HelloPost(HelloRequest request)
+        {
+            var name = !string.IsNullOrEmpty(request.Name) ? request.Name : "Whoever";
+            return "Hello " + name + " FAKE";
+        }
+
+    }
 }
