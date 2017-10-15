@@ -1,18 +1,21 @@
 # Asp.Net Core Playback
 an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests suites or for reproducing production issues in your development environment.
 
-## The mechanics
-The mechanics are quite simple: record incoming requests and ougoing responses in order to be able to reproduce them and test you Api code. 
+## The purpose
+1. Record your Api incoming requests and ougoing responses in order to reproduce them in order to test you Api code in isolation. 
+2. Fake your Api responses by implementing and registering a simple Fake Factory class in order to design your Api interface quickly 
 
-For example save your user Api interactions in production environment and replay them in local environment.
+For example save your user Api interactions in a production environment and replay them in a local environment.
 Another scenario is the ability to fake  your api responses in order to iteratively design  your Api  
 
-When the X-Playback-Mode is set to Record all the requests are saved to a storage ( only blob storage available for the moment) and a reponse header X-Playback-Id is returned.
-To replay you recorded request you just need to set the X-Playback-Mode to Playback and X.Playback-Id to the value previously returned.
+When the X-Playback-Mode header is set to Record all the requests are saved to a storage ( only blob storage available for the moment) and a reponse header X-Playback-Id is returned.
+To replay you recorded request you just need to set the X-Playback-Mode request header to Playback and X.Playback-Id request header to the value of the previously returned X-Playback-Id response header.
 
-When the X-Playback-Mode is set to Fake all the responses can be faked by registering a playback factory class where you can easily fake all the responses.
+When the X-Playback-Mode is set to Fake all the responses can be faked by registering a playback factory class where all the faked responses are codified.
 
-You can also capture any outgoing request responses in order to test your Api code in total isolation ( for example in local dev environment). For that your outgoing service proxies can inject the IPlayackContext object into their constructor to use it for the recording and replay of any response type. 
+You can also capture any outgoing request responses in order to test your Api code in total isolation.
+For that your outgoing service proxies can use the IPlaybackContext interface ( by injecting it into the  constructor ).
+This interface simplifies the saving and replaying of any Api outgoing call responses. 
 
 ## Use case 1 : has a developer i want to record api requests in order to be able to replay them
  using a simple playback identifier.
