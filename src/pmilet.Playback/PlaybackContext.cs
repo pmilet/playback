@@ -9,10 +9,7 @@ using pmilet.Playback.Core;
 
 namespace pmilet.Playback
 {
-    /// <summary>
-    /// prueba
-    /// </summary>
-    public class PlaybackRequestContext : IPlaybackContext
+    public class PlaybackContext : IPlaybackContext
     {
         private static string assemblyName = System.Reflection.Assembly.GetEntryAssembly()?.GetName()?.Name ?? string.Empty;
 
@@ -24,11 +21,22 @@ namespace pmilet.Playback
 
         private string _queryString = string.Empty;
 
-        public PlaybackRequestContext()
+        private readonly IHttpContextAccessor _accessor;
+
+        private readonly IPlaybackStorageService _playbackStorageService;
+
+        public PlaybackContext(IHttpContextAccessor accessor, IPlaybackStorageService playbackStorageService)
         {
+            _accessor = accessor;
+            _playbackStorageService = playbackStorageService;
         }
 
-        public void Read(HttpContext context)
+        public void ReadHttpContext( )
+        {
+            ReadHttpContext(_accessor.HttpContext);
+        }
+
+        public void ReadHttpContext(HttpContext context)
         {
             _context = context;
             Microsoft.Extensions.Primitives.StringValues headerValues;
@@ -56,56 +64,19 @@ namespace pmilet.Playback
                 PlaybackId = headerValues.FirstOrDefault();
         }
 
-        public string RequestMethod
-        {
-            get { return _context.Request.Method; }
-        }
-
-        public string RequestPath
-        {
-            //TODO: check
-            get { return _context.Request.Path.Value.Replace("api", "").Trim('/'); }
-        }
-
-        public string Version
-        {
-            get;set;
-        }
-
-        public string RequestContentHashCode
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(Content) ? Content.GetHashCode().ToString() : QueryString.GetHashCode().ToString();
-            }
-        }
-
-        private string ContextInfo
-        {
-            get;set;
-        }
-
         public string PlaybackId
         {
             get
             {
                 if (string.IsNullOrEmpty(_playbackId))
-                    return GeneratePlaybackId();
+                    return GenerateNewPlaybackId();
                 else
                     return _playbackId;
             }
             set { _playbackId = value; }
         }
 
-        private static string AssemblyName
-        {
-            get
-            {
-                return System.Reflection.Assembly.GetEntryAssembly()?.GetName()?.Name ?? string.Empty;
-            }
-        }
-
-        private string GeneratePlaybackId()
+        public string GenerateNewPlaybackId()
         {
             return ContextInfo + "_" + AssemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode;
         }
@@ -113,16 +84,6 @@ namespace pmilet.Playback
         public PlaybackMode PlaybackMode
         {
             get; private set;
-        }
-
-        private string QueryString
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_queryString))
-                    _queryString = _context.Request.QueryString.HasValue ? _context.Request.QueryString.Value : string.Empty;
-                return _requestBodyString;
-            }
         }
 
         public string Content
@@ -134,6 +95,55 @@ namespace pmilet.Playback
                     _context.Request.EnableRewind();
                     _requestBodyString = ReadToEnd(_context.Request.Body);
                 }
+                return _requestBodyString;
+            }
+        }
+
+        public IPlaybackStorageService PlaybackStorageService => _playbackStorageService;
+
+        private string RequestMethod
+        {
+            get { return _context.Request.Method; }
+        }
+
+        private string RequestPath
+        {
+            //TODO: check
+            get { return _context.Request.Path.Value.Replace("api", "").Trim('/'); }
+        }
+
+        private string Version
+        {
+            get;set;
+        }
+
+        private string RequestContentHashCode
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Content) ? Content.GetHashCode().ToString() : QueryString.GetHashCode().ToString();
+            }
+        }
+
+        private string ContextInfo
+        {
+            get;set;
+        }
+        
+        private static string AssemblyName
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetEntryAssembly()?.GetName()?.Name ?? string.Empty;
+            }
+        }
+
+        private string QueryString
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_queryString))
+                    _queryString = _context.Request.QueryString.HasValue ? _context.Request.QueryString.Value : string.Empty;
                 return _requestBodyString;
             }
         }

@@ -9,7 +9,10 @@ namespace pmilet.Playback.Core
     {
         string PlaybackId { get; }
         PlaybackMode PlaybackMode { get; }
-        void Read(HttpContext context);
         string Content { get; }
+        void ReadHttpContext();
+        void ReadHttpContext(HttpContext context);
+        IPlaybackStorageService PlaybackStorageService { get; }
+        string GenerateNewPlaybackId();        
     }
 }

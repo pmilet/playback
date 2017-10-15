@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Server.Kestrel.Internal;
-using pmilet.Playback.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using pmilet.Playback.Core;
 using System.Threading.Tasks;
 
 namespace ApiGateway
@@ -10,33 +6,26 @@ namespace ApiGateway
     public class MyServiceProxy
     {
         IPlaybackContext _playbackContext;
-        IPlaybackStorageService _playbackStorageService;
 
-        public MyServiceProxy()
+        public MyServiceProxy(IPlaybackContext context )
         {
-        }
-
-        public void SetPlayback(IPlaybackContext serviceContext, IPlaybackStorageService playbackStorageService)
-        {
-            _playbackContext = serviceContext;
-            _playbackStorageService = playbackStorageService;
+            _playbackContext = context;
+            _playbackContext.ReadHttpContext();
         }
 
         public async Task<MyServiceResponse> Execute( MyServiceRequest command)
         {
-           
             var result =  new MyServiceResponse() {  Response = command.Command + " OK" };
-            if (_playbackContext.PlaybackMode == PlaybackMode.Grabacion)
+            if (_playbackContext.PlaybackMode == PlaybackMode.Record)
             {
                 var body = Newtonsoft.Json.JsonConvert.SerializeObject(result);
-                await _playbackStorageService.UploadToStorageAsync(_playbackContext.PlaybackId + "_" + this.GetType().Name, body);
+                await _playbackContext.PlaybackStorageService.UploadToStorageAsync(_playbackContext.PlaybackId + "_" + this.GetType().Name, body);
             }
-            else if
-                (_playbackContext.PlaybackMode == PlaybackMode.Playback ||
+            else if (_playbackContext.PlaybackMode == PlaybackMode.Playback ||
                 _playbackContext.PlaybackMode == PlaybackMode.PlaybackChaos ||
                 _playbackContext.PlaybackMode == PlaybackMode.PlaybackReal)
             {
-                return await _playbackStorageService.ReplayFromStorageAsync<MyServiceResponse>(_playbackContext.PlaybackMode, _playbackContext.PlaybackId + "_" + this.GetType().Name);
+                return await _playbackContext.PlaybackStorageService.ReplayFromStorageAsync<MyServiceResponse>(_playbackContext.PlaybackMode, _playbackContext.PlaybackId + "_" + this.GetType().Name);
             }
             return result;
         }

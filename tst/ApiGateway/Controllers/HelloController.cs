@@ -15,11 +15,9 @@ namespace ApiGateway.Controllers
     public class HelloController : Controller
     {
         MyServiceProxy _serviceProxy;
-        public HelloController(IHttpContextAccessor accessor, IPlaybackContext context, IPlaybackStorageService service, MyServiceProxy serviceProxy)
+        public HelloController(MyServiceProxy serviceProxy)
         {
-            context.Read(accessor.HttpContext);
             _serviceProxy = serviceProxy;
-            _serviceProxy.SetPlayback(context, service);
         }
 
         // GET api/values

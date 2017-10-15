@@ -19,7 +19,7 @@ namespace pmilet.Playback
         public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IPlaybackContext,PlaybackRequestContext>();
+            services.AddScoped<IPlaybackContext,PlaybackContext>();
             services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
         }
 
