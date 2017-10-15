@@ -6,9 +6,9 @@
     <title>pmilet Playback</title>
     <authors>Pierre Milet</authors>
     <owners>Pierre Milet</owners>
-    <licenseUrl></licenseUrl>
+    <licenseUrl>https://github.com/pmilet/playback/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/pmilet/playback</projectUrl>
-    <iconUrl></iconUrl>
+    <iconUrl>https://avatars2.githubusercontent.com/u/18263595</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests suites or for reproducing production issues in your development environment.</description>
     <releaseNotes>First release</releaseNotes>
