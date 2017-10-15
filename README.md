@@ -1,9 +1,9 @@
 # Asp.Net Core Playback
 an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests suites or for reproducing production issues in your development environment.
 
-## The purpose
-1. Record your Api incoming requests and ougoing responses in order to reproduce them in order to test you Api code in isolation. 
-2. Fake your Api responses by implementing and registering a simple Fake Factory class in order to design your Api interface quickly 
+## Two usage scenarios
+1. Record  Api incoming requests and ougoing responses in order to reproduce them in order to test you Api code in isolation. 
+2. Fake Api responses by implementing and registering a simple Fake Factory class in order to design your Api interface quickly 
 
 For example save your user Api interactions in a production environment and replay them in a local environment.
 Another scenario is the ability to fake  your api responses in order to iteratively design  your Api  
