@@ -1,4 +1,0 @@
-C:\code\pmilet\playback\src\pmilet.Playback\bin\Debug\netcoreapp1.1\Iberfabric.Playback.deps.json
-C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\netcoreapp1.1\pmilet.Playback.csprojResolveAssemblyReference.cache
-C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\netcoreapp1.1\pmilet.Playback.csproj.CoreCompileInputs.cache
-C:\code\pmilet\playback\src\pmilet.Playback\obj\Debug\netcoreapp1.1\pmilet.Playback.AssemblyInfo.cs
