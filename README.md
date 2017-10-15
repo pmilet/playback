@@ -25,7 +25,7 @@ This interface simplifies the saving and replaying of any Api outgoing call resp
  Configure your Startup class 
  
 ```csharp
- public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             ...
             
@@ -67,7 +67,7 @@ Add this section to appsettings.json file
  Decorate your api method with the PlaybackSwaggerFilter
  
  ```csharp
-  [HttpGet]
+        [HttpGet]
         [SwaggerOperation("Hello")]
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
         public async Task<string> Get()
