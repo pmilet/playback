@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace pmilet.Playback
 {
-    public class PlaybackBlobStorageService : IPlaybackStorageService
+    public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private string _containerName;
         private readonly string _connectionString;
@@ -33,7 +33,7 @@ namespace pmilet.Playback
             _containerName = section.GetSection("Name").Value;
         }
 
-        public async Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0)
+        public async override Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0)
         {
             if (string.IsNullOrWhiteSpace(playbackId))
                 throw new PlaybackStorageException(playbackId, "playbackId not found");
@@ -68,47 +68,8 @@ namespace pmilet.Playback
             }
         }
 
-        public async Task UploadToStorageAsync(string fileId, string content, long elapsedTime = 0)
-        {
-            await UploadToStorageAsync(fileId, "", "", content, elapsedTime);
-        }
-
-        public async Task<T> ReplayFromStorageAsync<T>(PlaybackMode playbackMode, string playbackId)
-        {
-            string value = await ReplayFromStorageAsync(playbackMode, playbackId);
-            return JsonConvert.DeserializeObject<T>( value);
-        }
-
-        public async Task<string> ReplayFromStorageAsync(PlaybackMode playbackMode, string playbackId)
-        {
-            var fileInfo = await DownloadFromStorageAsync(playbackId);
-            switch (playbackMode)
-            {
-                case PlaybackMode.PlaybackReal:
-                    await WaitFor(fileInfo.ResponseTime);
-                    break;
-                case PlaybackMode.PlaybackChaos:
-                    long min = fileInfo.ResponseTime;
-                    long max = 15000;
-                    long mean = (long)((max - fileInfo.ResponseTime) / 2.0);
-                    min = mean < min ? mean : min;
-                    max = max < mean ? mean : max;
-                    var rt = (long)RandomGaussian.NextInRange(min, mean, max);
-                    await WaitFor(rt);
-                    break;
-                default:
-                    break;
-            }
-            return fileInfo.BodyString;
-        }
-
-        private async Task WaitFor(long responseTime)
-        {
-            await Task.Delay(TimeSpan.FromMilliseconds(responseTime));
-        }
-
-
-        public async Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
+    
+        public async override Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
         {
             string contentType;
             string bodyString;

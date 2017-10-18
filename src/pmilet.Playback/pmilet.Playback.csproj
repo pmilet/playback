@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net452;net461</TargetFrameworks>
-    <AssemblyName>Iberfabric.Playback</AssemblyName>
+    <AssemblyName>pmilet.Playback</AssemblyName>
     <PackageId>Iberfabric.Playback</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
