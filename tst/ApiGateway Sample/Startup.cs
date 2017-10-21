@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using pmilet.Playback;
+using pmilet.Playback.Core;
 
 namespace ApiGateway_Sample
 {
@@ -31,7 +32,6 @@ namespace ApiGateway_Sample
             
             services.AddPlayback(Configuration);
 
-            services.AddFakeFactory<MyPlaybackFakeFactory>();
             services.AddScoped<MyServiceProxy, MyServiceProxy>();
 
             services.AddSwaggerGen(c =>

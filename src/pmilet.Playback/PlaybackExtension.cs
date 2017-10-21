@@ -12,12 +12,9 @@ namespace pmilet.Playback
     public static class PlaybackExtension
     {
         public enum PlaybackStorageType { Blob, File }
-        public static void AddFakeFactory<T>(this IServiceCollection services)
-        {
-            services.AddScoped(typeof(IFakeFactory), typeof(T));
-        }
 
-        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, PlaybackStorageType type = PlaybackStorageType.Blob)
+        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, 
+            PlaybackStorageType type = PlaybackStorageType.Blob, IFakeFactory fakeFactory = null)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
@@ -31,7 +28,12 @@ namespace pmilet.Playback
                     services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
                     break;
             }
-        } 
+            if (fakeFactory == null)
+            {
+                fakeFactory = new DefaultFakeFactory();
+            }
+            services.AddScoped(typeof(IFakeFactory), fakeFactory.GetType());
+        }
 
         public static IApplicationBuilder UsePlayback(this IApplicationBuilder builder)
         {

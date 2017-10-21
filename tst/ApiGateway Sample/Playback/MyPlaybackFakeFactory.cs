@@ -27,7 +27,7 @@ namespace ApiGateway_Sample
                         GenerateFakeResponse<string, string>(context, HelloGet);
                     break;
                 default:
-                    break;
+                    throw new NotImplementedException("fake method not found");
             }
         }
 
