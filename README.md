@@ -2,7 +2,7 @@
 an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests or for reproducing production issues in the development environment.
 
 ## Two usage scenarios
-1. Record  Api incoming requests and outgoing responses in order to reproduce for testing or troubleshooting. 
+1. Record incoming Api requests and outgoing Api responses in order to reproduce for testing or troubleshooting. 
 2. Fake Api responses in order to quickly design your rest api interface . 
 
 When the X-Playback-Mode header is set to Record the request is saved to a remote storage (remote blob or local file storage available for the moment) and then a X-Playback-Id reponse header is returned that should be used for replay.
