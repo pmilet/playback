@@ -14,19 +14,10 @@ namespace pmilet.Playback
     public class PlaybackFileStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private readonly string _folderPath;
-        public PlaybackFileStorageService(string rootFolder, string folderName)
+        public PlaybackFileStorageService()
         {
-            _folderPath = $"{rootFolder}\\{folderName}";
+            _folderPath = $".\\playback";
         }
-
-        public PlaybackFileStorageService(IConfigurationRoot configuration)
-        {
-            var section = configuration.GetSection("PlaybackStorage");
-            var rootFolder = ".\\PlayackFileStorageFolder";
-            var folderName = section.GetSection("Name").Value;
-            _folderPath = $"{rootFolder}\\{folderName}";
-        }
-
 
         public override async Task<PlaybackMessage> DownloadFromStorageAsync(string fileId)
         {

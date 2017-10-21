@@ -28,9 +28,9 @@ namespace pmilet.Playback
 
         public PlaybackBlobStorageService(IConfigurationRoot configuration)
         {
-            var section = configuration.GetSection("PlaybackStorage");
+            var section = configuration.GetSection("PlaybackBlobStorage");
             _connectionString = section.GetSection("ConnectionString").Value;
-            _containerName = section.GetSection("Name").Value;
+            _containerName = section.GetSection("ContainerName").Value;
         }
 
         public async override Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0)

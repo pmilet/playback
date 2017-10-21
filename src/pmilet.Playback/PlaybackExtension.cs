@@ -17,18 +17,18 @@ namespace pmilet.Playback
             services.AddScoped(typeof(IFakeFactory), typeof(T));
         }
 
-        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, PlaybackStorageType type = PlaybackStorageType.File)
+        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, PlaybackStorageType type = PlaybackStorageType.Blob)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
             switch (type)
             {
-                case PlaybackStorageType.Blob:
-                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
-                    break;
                 case PlaybackStorageType.File:
+                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackFileStorageService());
+                    break;
+                case PlaybackStorageType.Blob:
                 default:
-                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackFileStorageService(configuration));
+                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
                     break;
             }
         } 
