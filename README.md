@@ -1,25 +1,22 @@
 # Asp.Net Core Playback
-an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests suites or for reproducing production issues in your development environment.
+an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests or for reproducing production issues in the development environment.
 
 ## Two usage scenarios
-1. Record  Api incoming requests and ougoing responses to reproduce them in order to test you Api code in isolation. 
-2. Fake Api responses by implementing and registering a simple Fake Factory class in order to design your Api interface in quick iterations. 
+1. Record  Api incoming requests and outgoing responses in order to reproduce for testing or troubleshooting. 
+2. Fake Api responses in order to quickly design your rest api interface . 
 
-For example we could save all our user Api interactions in production and replay them in a local environment to quickly troubleshoot issues.
+When the X-Playback-Mode header is set to Record the request is saved to a remote storage (remote blob or local file storage available for the moment) and then a X-Playback-Id reponse header is returned that should be used for replay.
 
-When the X-Playback-Mode header is set to Record the request is saved to a remote storage ( only blob storage available for the moment) and then a X-Playback-Id reponse header is returned to be used for replay.
+To replay a recorded request set the X-Playback-Mode request header to Playback mode and X.Playback-Id request header to the value returned in the previous step.
 
-To replay a recorded request set the X-Playback-Mode request header to Playback and X.Playback-Id request header to the value returned in the record step.
+When the X-Playback-Mode is set to Fake fake responses will be returned. The faked responses are codified in a fake factory class you should implement and explicitly register.
 
-When the X-Playback-Mode is set to Fake fake responses can be returned. The faked responses are codified in a fake factory class you should implement and register.
+There is also the possibility to capture the responses of any outgoing Api request in order to test the Api in total isolation.
+Use the IPlaybackContext interface into your outgoing service proxies ( by injecting the IPlaybackContext into the  constructors ). This interface provides methods for saving and replaying the responses from outgoing calls ( and correlate to the Api playback-id). 
 
-There is also the possibility to capture any Api outgoing request responses in order to test the Api in total isolation.
-For that you could use the IPlaybackContext interface into your outgoing service proxies ( by injecting the IPlaybackContext into their  constructors ). This interface provides methods for saving and replaying the outgoing call responses and associate it to a Api playbackid. 
-
-## Use case 1 : has a developer i want to record api requests in order to be able to replay them
- using a simple playback identifier.
+## Use case 1 : has a developer i want to record api requests in order to be able to replay them.
  
- In you web api project add a reference to nuget package pmilet.Playback
+ In you web api project install pmilet.Playback package: Install-Package pmilet.Playback -Version 1.0.6
  
  Configure your Startup class 
  
@@ -54,16 +51,16 @@ For that you could use the IPlaybackContext interface into your outgoing service
         }
 ```
 
-Configure playback storage settings. The only supported playback storage service (for the moment) is Azure Blob Storage.
-A Storage connection string and container name should be provided.
-Add this section to appsettings.json file
+Configure playback storage settings. The default storage service is Azure Blob Storage.
+A Storage connection string and container name should be provided. Add this section to theappsettings.json file:
  
  "PlaybackStorage": {
     "ConnectionString": "DefaultEndpointsProtocol=https;AccountName=ijewels;AccountKey=gB0hTWJoD+QZ4Wmipn1cZjt9vKqZJ9bABy7z/zDBDT3Dgojr2sMzRgGDW/sGa5CG//Ah4O7saJClGSWH/7VgIg==;EndpointSuffix=core.windows.net",
     "Name": "playback"
   }
   
- Decorate your api method with the PlaybackSwaggerFilter
+  
+To view the playback headers in swagger decorate your api method with the PlaybackSwaggerFilter
  
  ```csharp
         [HttpGet]
@@ -73,11 +70,11 @@ Add this section to appsettings.json file
  ```
 
 Test it:
-1. Navigate to your swagger UI and select and api method to execute
-2. Choose X-Playback-Mode = Record and try-out
+1. Navigate to swagger UI
+2. Set the X-Playback-Mode request header to Record and try-out
 3. Copy the X-Playback-Id value
-4. Choose X-Playback-Mode = Playback and try-out
-5. you should receive the same result has in step 2. 
+4. Set the X-Playback-Mode to Playback and try-out.
+5. You should receive the same result has in step 2. 
 
 ## Use case 2 : has a developer i want to fake my api responses in order to design my api contract quickly.
  
@@ -86,7 +83,7 @@ Test it:
     {
         ...
 
-        services.AddFakeFactory<MyPlaybackFakeFactory>();
+            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
 
         ...
     }
@@ -119,15 +116,14 @@ Implement your fake factory for example like this...
 ```
 
 Test it:
-1. Navigate to your swagger UI and select and api method to execute
-2. Choose X-Playback-Mode = Fake and try-out
-5. you should receive the faked result codified in your Fake Factory class. 
+1. Navigate to swagger UI
+2. Set X-Playback-Mode header to Fake and try-out
+3. You should receive the faked response. 
 
 
-## Use case 3 : has a developer i want to record my api requests and also the outgoing responses in order to be able to replay them
- using a simple playback identifier.
+## Use case 3 : has a developer i want to record my api requests and outgoing responses in order to be able to replay them.
 
-Implement your service proxy leveraging the IPlaybackContext interface to record and replay your service outgoing responses:
+Use the IPlaybackContext interface into your outgoing services proxy to record and replay outgoing responses:
 
 ```csharp
    public class MyServiceProxy
