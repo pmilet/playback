@@ -30,7 +30,7 @@ namespace ApiGateway_Sample
         {
             services.AddMvc().AddControllersAsServices();
             
-            services.AddPlayback(Configuration);
+            services.AddPlayback(Configuration, PlaybackExtension.PlaybackStorageType.Blob, new MyPlaybackFakeFactory());
 
             services.AddScoped<MyServiceProxy, MyServiceProxy>();
 
