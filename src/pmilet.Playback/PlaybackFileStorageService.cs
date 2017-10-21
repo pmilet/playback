@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace pmilet.Playback
         public PlaybackFileStorageService(IConfigurationRoot configuration)
         {
             var section = configuration.GetSection("PlaybackStorage");
-            var rootFolder = section.GetSection("ConnectionString").Value;
+            var rootFolder = ".\\PlayackFileStorageFolder";
             var folderName = section.GetSection("Name").Value;
             _folderPath = $"{rootFolder}\\{folderName}";
         }
@@ -40,7 +41,7 @@ namespace pmilet.Playback
             PlaybackMessage playbackMessage = new PlaybackMessage(path, queryString, bodyString, "text", elapsedTime);
             try
             {
-                await UploadRecordedFileAsync( JsonConvert.SerializeObject(playbackMessage), $"_folderPath\\{playbackId}" );                
+                await UploadRecordedFileAsync( JsonConvert.SerializeObject(playbackMessage), _folderPath, playbackId );                
             }
             catch (Exception ex)
             {
@@ -52,7 +53,7 @@ namespace pmilet.Playback
         {
             try
             {
-                string fullPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory,$".\\{folderPath}\\{fileName}" );
+                string fullPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory,$"{folderPath}\\{fileName}" );
 
                 if (!File.Exists(fullPath))
                 {
@@ -67,9 +68,15 @@ namespace pmilet.Playback
             }
         }
 
-        internal async Task UploadRecordedFileAsync(string content, string folderPath)
+        internal async Task UploadRecordedFileAsync(string content, string folderPath, string fileId)
         {
-            File.WriteAllText(folderPath, content);
+            folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{folderPath}");
+            string fullPath = $"{folderPath}\\{fileId}";
+            DirectorySecurity securityRules = new DirectorySecurity();
+            securityRules.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
+            if( !Directory.Exists( folderPath) )
+                Directory.CreateDirectory(folderPath, securityRules );
+            File.WriteAllText($"{folderPath}\\{fileId}", content);
         }
 
 
