@@ -54,9 +54,9 @@ Use the IPlaybackContext interface into your outgoing service proxies ( by injec
 Configure playback storage settings. The default storage service is Azure Blob Storage.
 A Storage connection string and container name should be provided. Add this section to theappsettings.json file:
  
- "PlaybackStorage": {
-    "ConnectionString": "DefaultEndpointsProtocol=https;AccountName=ijewels;AccountKey=gB0hTWJoD+QZ4Wmipn1cZjt9vKqZJ9bABy7z/zDBDT3Dgojr2sMzRgGDW/sGa5CG//Ah4O7saJClGSWH/7VgIg==;EndpointSuffix=core.windows.net",
-    "Name": "playback"
+ "PlaybackBlobStorage": {
+    "ConnectionString": "UseDevelopmentStorage=true",
+    "ContainerName": "playback"
   }
   
   
@@ -118,7 +118,7 @@ Use the IPlaybackContext interface into your outgoing services proxy to record a
     }
  ```
  
-Implement your fake factory for example like this...
+Implement your fake factory: for example in this example the when requesting the uri: /api/hello with GET verb a Hello Fake string is returned
        
  ```csharp
     public class MyPlaybackFakeFactory : FakeFactoryBase
