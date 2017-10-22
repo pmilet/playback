@@ -1,22 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using pmilet.Playback;
 using pmilet.Playback.Core;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.AccessControl;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace pmilet.Playback
+namespace ApiGateway_Sample
 {
     public class PlaybackFileStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private readonly string _folderPath;
         public PlaybackFileStorageService()
         {
-            _folderPath = $".\\playback";
+            _folderPath = $"{Environment.CurrentDirectory}\\playback";
         }
 
         public override async Task<PlaybackMessage> DownloadFromStorageAsync(string fileId)
@@ -44,7 +41,7 @@ namespace pmilet.Playback
         {
             try
             {
-                string fullPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory,$"{folderPath}\\{fileName}" );
+                string fullPath = $"{folderPath}\\{fileName}";
 
                 if (!File.Exists(fullPath))
                 {
@@ -65,8 +62,8 @@ namespace pmilet.Playback
             string fullPath = $"{folderPath}\\{fileId}";
             DirectorySecurity securityRules = new DirectorySecurity();
             securityRules.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
-            if( !Directory.Exists( folderPath) )
-                Directory.CreateDirectory(folderPath, securityRules );
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath, securityRules);
             File.WriteAllText($"{folderPath}\\{fileId}", content);
         }
 

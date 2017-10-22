@@ -45,7 +45,7 @@ namespace pmilet.Playback.Core
 
         public MemoryStream GetBodyStream()
         {
-            return BodyString != null ? new MemoryStream(System.Text.Encoding.Default.GetBytes(BodyString)) : null;
+            return BodyString != null ? new MemoryStream(System.Text.Encoding.UTF8.GetBytes(BodyString)) : null;
         }
     }
 }

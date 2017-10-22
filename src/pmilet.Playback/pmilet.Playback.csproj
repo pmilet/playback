@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net452;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;netcoreapp2.0;netstandard2.0;net461;net452</TargetFrameworks>
     <AssemblyName>pmilet.Playback</AssemblyName>
-    <PackageId>Iberfabric.Playback</PackageId>
+    <PackageId>pmilet.Playback</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

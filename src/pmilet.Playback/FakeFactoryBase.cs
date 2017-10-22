@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace pmilet.Playback
 {
@@ -34,7 +35,7 @@ namespace pmilet.Playback
         protected Stream Serialize<T>(T body)
         {
             string serializedBody = JsonConvert.SerializeObject(body);
-            var bytes = Encoding.Default.GetBytes(serializedBody);
+            var bytes = Encoding.UTF8.GetBytes(serializedBody);
             MemoryStream m = new MemoryStream(bytes);
             return m;
         }
@@ -44,7 +45,7 @@ namespace pmilet.Playback
             if (type.Namespace == "System")
             {
                 var key = context.Request.QueryString.HasValue ? context.Request.QueryString.Value.Replace("?","").Split('=')[0]  : "";
-                return string.IsNullOrEmpty(key) ? type.IsValueType ? Activator.CreateInstance(type) : null : context.Request.Query[key].ToString();
+                return string.IsNullOrEmpty(key) ? type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null : context.Request.Query[key].ToString();
             }
 
             var obj = Activator.CreateInstance(type);

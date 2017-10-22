@@ -14,20 +14,15 @@ namespace pmilet.Playback
         public enum PlaybackStorageType { Blob, File }
 
         public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, 
-            PlaybackStorageType type = PlaybackStorageType.Blob, IFakeFactory fakeFactory = null)
+            IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
-            switch (type)
+            if( playbackStorageService == null )
             {
-                case PlaybackStorageType.File:
-                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackFileStorageService());
-                    break;
-                case PlaybackStorageType.Blob:
-                default:
-                    services.AddScoped<IPlaybackStorageService>(provider => new PlaybackBlobStorageService(configuration));
-                    break;
+                playbackStorageService = new PlaybackBlobStorageService(configuration);
             }
+            services.AddScoped<IPlaybackStorageService>(provider => playbackStorageService);
             if (fakeFactory == null)
             {
                 fakeFactory = new DefaultFakeFactory();

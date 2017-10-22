@@ -50,14 +50,14 @@ namespace pmilet.Playback
                 CloudBlobContainer container = blobClient.GetContainerReference(_containerName);
 
                 // Create the container if it doesn't already exist.
-                container.CreateIfNotExists();
+                await container.CreateIfNotExistsAsync();
 
                 // Retrieve reference to a blob.
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
 
                 await blockBlob.UploadTextAsync(JsonConvert.SerializeObject(playbackMessage));
                 blockBlob.Properties.ContentType = playbackMessage.ContentType;
-                blockBlob.SetProperties();
+                await blockBlob.SetPropertiesAsync();
                 foreach (string key in playbackMessage.Metadata.Keys)
                     blockBlob.Metadata.Add(key, playbackMessage.Metadata[key]);
                 await blockBlob.SetMetadataAsync();
@@ -86,7 +86,7 @@ namespace pmilet.Playback
                 CloudBlobContainer container = blobClient.GetContainerReference(_containerName);
 
                 string text = string.Empty;
-                if (!container.Exists()) return null;
+                if (! await container.ExistsAsync()) return null;
 
                 // Retrieve reference to a blob named "photo1.jpg".
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
@@ -101,7 +101,7 @@ namespace pmilet.Playback
                     {
                         string encodedString = Encoding.UTF8.GetString(memoryStream.ToArray());
                         var bytes = System.Convert.FromBase64String(encodedString);
-                        bodyString = Encoding.Default.GetString(bytes);
+                        bodyString = Encoding.UTF8.GetString(bytes);
                     }
                 }
                 return JsonConvert.DeserializeObject<PlaybackMessage>(bodyString);
