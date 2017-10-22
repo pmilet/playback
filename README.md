@@ -1,5 +1,5 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests or production issues in the development environment.
+An Asp.Net Core middleware library that simplifies the recording and playback of HTTP incoming requests and outgoing requests responses. Suitable for reproducing user interactions in automated tests or production issues in the development environment.
 
 ## Two usage scenarios
 1. Record incoming Api requests and outgoing Api responses in order to reproduce for testing or troubleshooting. 
