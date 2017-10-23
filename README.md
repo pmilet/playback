@@ -1,9 +1,10 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library that simplifies the recording and playback of WebApi incoming requests and outgoing requests responses. Suitable for saving user interactions in production to be replayed in development.
+An Asp.Net Core middleware library that simplifies the recording and playback of WebApi incoming requests and incoming responses from outgoing requests. Suitable for saving user interactions in production to be replayed in development.
 
-## Two usage scenarios
-1. Record incoming Api requests and outgoing Api responses in order to reproduce for testing or troubleshooting. 
-2. Fake Api responses in order to quickly design your rest api interface . 
+## Three usage scenarios
+1. Record incoming Api requestsin order to reproduce for testing or troubleshooting. 
+2. Fake Api responses in order to quickly design your rest api interface .
+3. Prepare your service proxy to record incoming responses from outgoing calls (to external systems or services).
 
 When the X-Playback-Mode header is set to Record the request is saved to a remote storage (remote blob or local file storage available for the moment) and then a X-Playback-Id reponse header is returned that should be used for replay.
 
@@ -76,36 +77,7 @@ Test it:
 4. Set the X-Playback-Mode to Playback and try-out.
 5. You should receive the same result has in step 2. 
 
-## Use case 2 : has a developer I want to record my api requests and outgoing responses in order to be able to replay them.
-
-Use the IPlaybackContext interface into your outgoing services proxy to record and replay outgoing responses:
-
-```csharp
-   public class MyServiceProxy
-   {
-        IPlaybackContext _playbackContext;
-        public MyServiceProxy(IPlaybackContext context )
-        {
-            _playbackContext = context;
-        }
-
-        public async Task<MyServiceResponse> Execute( MyServiceRequest command)
-        {
-            var result =  new MyServiceResponse() {  Output = $"MyService received input: {command.Input}" };
-            if (_playbackContext.IsRecord)
-            {
-                await _playbackContext.RecordResult<MyServiceResponse>(result);
-            }
-            else if ( _playbackContext.IsPlayback )
-            {
-                return await _playbackContext.PlaybackResult<MyServiceResponse>();
-            }
-            return result;
-        }
-    }
-```
-
-## Use case 3 : has a developer I want to fake my api responses in order to design my api contract quickly.
+## Use case 2 : has a developer I want to fake my api responses in order to design my api contract quickly.
  
  ```csharp
     public void ConfigureServices(IServiceCollection services)
@@ -148,3 +120,32 @@ Test it:
 1. Navigate to swagger UI
 2. Set X-Playback-Mode header to Fake and try-out
 3. You should receive the faked response. 
+
+## Use case 3 : has a developer I want to record my api requests and outgoing responses in order to be able to replay them.
+
+Use the IPlaybackContext interface into your outgoing services proxy to record and replay outgoing responses:
+
+```csharp
+   public class MyServiceProxy
+   {
+        IPlaybackContext _playbackContext;
+        public MyServiceProxy(IPlaybackContext context )
+        {
+            _playbackContext = context;
+        }
+
+        public async Task<MyServiceResponse> Execute( MyServiceRequest command)
+        {
+            var result =  new MyServiceResponse() {  Output = $"MyService received input: {command.Input}" };
+            if (_playbackContext.IsRecord)
+            {
+                await _playbackContext.RecordResult<MyServiceResponse>(result);
+            }
+            else if ( _playbackContext.IsPlayback )
+            {
+                return await _playbackContext.PlaybackResult<MyServiceResponse>();
+            }
+            return result;
+        }
+    }
+```
