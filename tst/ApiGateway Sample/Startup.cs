@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 using pmilet.Playback;
 using pmilet.Playback.Core;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.IO;
 
 namespace ApiGateway_Sample
 {
@@ -37,6 +40,10 @@ namespace ApiGateway_Sample
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
+                c.CustomSchemaIds(type => type.FriendlyId(true));
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "ApiGateway Sample.xml");
+                c.IncludeXmlComments(filePath);
             });
 
         }

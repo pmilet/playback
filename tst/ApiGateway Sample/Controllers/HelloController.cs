@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using pmilet.Playback;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace ApiGateway_Sample
 {
@@ -11,37 +12,57 @@ namespace ApiGateway_Sample
     public class HelloController : Controller
     {
         MyServiceProxy _serviceProxy;
+
         public HelloController(MyServiceProxy serviceProxy)
         {
             _serviceProxy = serviceProxy;
         }
 
-        // GET api/values
+        /// <summary>
+        /// GET Hello
+        /// </summary>
+        /// <returns>Hello</returns>
+        // GET api/hello
         [HttpGet]
-        [SwaggerOperation("Hello")]
+        [SwaggerOperation("Get Hello")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(string))]
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
-        public async Task<string> Get()
+        public async Task<IActionResult> Get()
         {
-            var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = "Get" });
-            return v.Output;
+            var response = await _serviceProxy.Execute(new MyServiceRequest() { Input = "Get" });
+            return new OkObjectResult(response.Output);
         }
 
-        // GET api/values/5
-        [HttpGet("{name}")]
-        [SwaggerOperation("Hello")]
+        /// <summary>
+        /// GET Hello by name
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <returns>MyService received input: {name}</returns>
+        // GET api/hello/5
+        [HttpGet("{name}", Name = "GetByName")]
+        [SwaggerOperation("Get Hello by name")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(string))]
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
-        public async Task<string> Get(string name)
+        public async Task<IActionResult> GetByName(string name)
         {
-            var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = $"Get {name}" });
-            return v.Output;
+            var response = await _serviceProxy.Execute(new MyServiceRequest() { Input = $"Get {name}" });
+            return new OkObjectResult(response.Output);
         }
 
-        // POST api/values
+        /// <summary>
+        /// POST Hello
+        /// </summary>
+        /// <param name="request">Name</param>
+        /// <returns>Created. Route new hello</returns>
+        // POST api/hello
         [HttpPost]
-        [SwaggerOperation("Hello")]
+        [SwaggerOperation("Post Hello")]
+        [SwaggerResponse((int)HttpStatusCode.Created, typeof(string))]
         [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
-        public void Post([FromBody]HelloRequest req)
+        public async Task<IActionResult> Post([FromBody]HelloRequest request)
         {
+            var response = await _serviceProxy.Execute(new MyServiceRequest() { Input = $"Post {request.Name}" });
+            return new CreatedAtRouteResult("GetByName", new { name = request.Name }, response);
         }        
     }
 }

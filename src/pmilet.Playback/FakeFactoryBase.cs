@@ -15,10 +15,19 @@ namespace pmilet.Playback
 {
     public abstract class FakeFactoryBase : IFakeFactory
     {
-        protected void GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
+        protected void GenerateFakeResponse<TResponse>(HttpContext context, Func<string, TResponse> func)
+        {
+            var path = context.Request.Path;
+            var response = func(path);
+            Stream fakeResponseStream = Serialize<TResponse>(response);
+            fakeResponseStream.CopyToAsync(context.Response.Body);
+        }
+
+        protected void GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<string, TRequest, TResponse> func)
         {
             dynamic request = context.Request.Method != "GET" ? Deserialize<TRequest>(context.Request.Body) : GetFromQueryString(context, typeof(TRequest));
-            var response = func(request);
+            var path = context.Request.Path;
+            var response = func(path, request);
             Stream fakeResponseStream = Serialize<TResponse>(response);
             fakeResponseStream.CopyToAsync(context.Response.Body);
         }
