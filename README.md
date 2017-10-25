@@ -22,7 +22,7 @@ Use the IPlaybackContext interface into your outgoing service proxies ( by injec
  Configure your Startup class 
  
 ```csharp
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ...
             
@@ -34,6 +34,8 @@ Use the IPlaybackContext interface into your outgoing service proxies ( by injec
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
             });
+            
+            return services.BuildServiceProvider();
 
         }
 ```
