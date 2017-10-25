@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiGateway Sample</name>
+    </assembly>
+    <members>
+        <member name="M:ApiGateway_Sample.HelloController.Get">
+            <summary>
+            GET Hello
+            </summary>
+            <returns>Hello</returns>
+        </member>
+        <member name="M:ApiGateway_Sample.HelloController.GetByName(System.String)">
+            <summary>
+            GET Hello by name
+            </summary>
+            <param name="name">Name</param>
+            <returns>MyService received input: {name}</returns>
+        </member>
+        <member name="M:ApiGateway_Sample.HelloController.Post(ApiGateway_Sample.HelloRequest)">
+            <summary>
+            POST Hello
+            </summary>
+            <param name="request">Name</param>
+            <returns>Created. Route new hello</returns>
+        </member>
+    </members>
+</doc>
