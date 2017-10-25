@@ -11,7 +11,7 @@ When the X-Playback-Mode request header is set to Record the request will be sav
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
 ```
 
-then a  x-playback-id response header should be received. 
+then a  x-playback-id response header will be received. 
 
 ```javascript
 Response Headers
