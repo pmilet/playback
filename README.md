@@ -27,7 +27,7 @@ Response Headers
 }
 ```
 
-When the X-Playback-Mode request header is set to Playback the request will be replayed; you should also set the x-playback-id request header.
+When the X-Playback-Mode request header is set to Playback the request will be replayed; you should also set the x-playback-id request header with the value received during recording.
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
