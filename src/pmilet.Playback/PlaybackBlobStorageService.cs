@@ -25,8 +25,11 @@ namespace pmilet.Playback
             _connectionString = blobStorageConnectionString;
             _containerName = blobStorageContainerName;
         }
+        public PlaybackBlobStorageService(IConfigurationRoot configuration) : this( (IConfiguration)configuration)
+        {
+        }
 
-        public PlaybackBlobStorageService(IConfigurationRoot configuration)
+        public PlaybackBlobStorageService(IConfiguration configuration)
         {
             var section = configuration.GetSection("PlaybackBlobStorage");
             _connectionString = section.GetSection("ConnectionString").Value;
@@ -95,7 +98,8 @@ namespace pmilet.Playback
                 {
                     await blockBlob.DownloadToStreamAsync(memoryStream);
                     contentType = blockBlob.Properties.ContentType;
-                    if (blockBlob.Properties.ContentType.Contains("text"))
+                    if (blockBlob.Properties.ContentType!=null && 
+                        blockBlob.Properties.ContentType.Contains("text"))
                         bodyString = Encoding.UTF8.GetString(memoryStream.ToArray());
                     else
                     {

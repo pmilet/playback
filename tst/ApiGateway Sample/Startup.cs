@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using pmilet.Playback;
 using pmilet.Playback.Core;
+using System;
 
 namespace ApiGateway_Sample
 {
@@ -26,7 +27,7 @@ namespace ApiGateway_Sample
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddControllersAsServices();
             
@@ -38,6 +39,7 @@ namespace ApiGateway_Sample
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
             });
+            return services.BuildServiceProvider();
 
         }
 

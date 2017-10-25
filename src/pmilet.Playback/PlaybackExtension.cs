@@ -13,7 +13,13 @@ namespace pmilet.Playback
     {
         public enum PlaybackStorageType { Blob, File }
 
-        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration, 
+        public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration,
+           IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
+        {
+            AddPlayback(services, configuration, playbackStorageService, fakeFactory);
+        }
+
+        public static void AddPlayback(this IServiceCollection services, IConfiguration configuration, 
             IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

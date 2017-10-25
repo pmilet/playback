@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pmilet.Playback", "src\pmilet.Playback\pmilet.Playback.csproj", "{3DB38391-4C3C-4460-BE21-CDD9CF637E1A}"
 EndProject
@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{E98DA495-144B-4E71-A48E-0CFDF8667175}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{688215C4-C6DD-49AD-B936-CA534D2F66B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,12 +32,17 @@ Global
 		{CCA7E1DD-CF4A-48F2-B4B5-48360B813066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCA7E1DD-CF4A-48F2-B4B5-48360B813066}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCA7E1DD-CF4A-48F2-B4B5-48360B813066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{688215C4-C6DD-49AD-B936-CA534D2F66B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{688215C4-C6DD-49AD-B936-CA534D2F66B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{688215C4-C6DD-49AD-B936-CA534D2F66B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{688215C4-C6DD-49AD-B936-CA534D2F66B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CCA7E1DD-CF4A-48F2-B4B5-48360B813066} = {E98DA495-144B-4E71-A48E-0CFDF8667175}
+		{688215C4-C6DD-49AD-B936-CA534D2F66B1} = {E98DA495-144B-4E71-A48E-0CFDF8667175}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2323340C-4725-4D0D-8A6E-F61F82BC5FC6}
