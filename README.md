@@ -1,9 +1,7 @@
 # Asp.Net Core Playback
 An Asp.Net Core middleware library that simplifies the recording and playback of WebApi calls. Suitable for saving user interactions in production to be replayed in development.
 
-### There is two usage scenarios:
-1. Record your incoming Api requests and incoming responses (from outgoing requests) . 
-2. Fake the responses of your Api .
+###  How to record incoming Api requests 
 
 Once your Asp.NetCore Api is configured for playback ( see sample in github repo ) you can start recording and replaying Api requests 
 
@@ -11,6 +9,7 @@ When the X-Playback-Mode request header is set to Record the request will be sav
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
+```
 
 then a  x-playback-id response header should be received. 
 
@@ -38,3 +37,47 @@ Notice that the response is exactly the same has before.
 
 When setting the x-playback-mode to None the request is not saved neither replayed. 
 
+### How to record responses received from outgoing requests
+
+For recording incoming responses you could use the PlaybackContext injected in your Api proxies.
+
+this code excerpt show how you can save a response received from an outgoing api call
+
+```cs
+       var response = await httpClient.GetAsync(url);
+       var result = await response.Content.ReadAsStringAsync();
+       if (_playbackContext.IsRecord)
+            {
+                await _playbackContext.RecordResult<MyServiceResponse>(result);
+            }
+            else if ( _playbackContext.IsPlayback )
+            {
+                return await _playbackContext.PlaybackResult<MyServiceResponse>();
+            }
+     
+```
+
+### How to fake api responses 
+
+For faking api call responses you could implement a class that inherits from IFakeFactory.
+
+this code excerpt show how to use the FakeFactoryBase abstract class to implement your own factory
+
+```cs
+public class MyPlaybackFakeFactory : FakeFactoryBase
+    {
+        public override void GenerateFakeResponse(HttpContext context)
+        {
+            switch (context.Request.Path.Value.ToLower())
+            {
+                case "/api/hello":
+                    if (context.Request.Method == "POST")
+                        GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
+                    else if (context.Request.Method == "GET")
+                        GenerateFakeResponse<string, string>(context, HelloGet);
+                    break;
+                default:
+                    throw new NotImplementedException("fake method not found");
+            }
+        }
+```
