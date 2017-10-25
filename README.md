@@ -8,7 +8,11 @@ An Asp.Net Core middleware library that simplifies the recording and playback of
 Once your Asp.NetCore Api has been configured for playback ( see code samples ) you can start recording your Api requests 
 
 When the X-Playback-Mode is set to record the request will be saved (you will have to configure your repository in appsettings.json). 
-curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/11
+
+```javascript
+curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://localhost/api/Hello/11
+```
+
 And a x-playback-id response header is received
 
 ```javascript
