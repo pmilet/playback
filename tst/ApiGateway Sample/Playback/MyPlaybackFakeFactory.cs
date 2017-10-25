@@ -31,6 +31,7 @@ namespace ApiGateway_Sample
             }
         }
 
+
         private string HelloGet(string request)
         {
             return "Hello FAKE";
