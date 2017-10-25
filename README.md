@@ -39,7 +39,7 @@ When setting the x-playback-mode to None the request is not saved neither replay
 
 ### How to record responses received from outgoing requests
 
-For recording incoming responses you could use the PlaybackContext injected in your Api proxies.
+For recording responses from outgoing requests you should use the PlaybackContext class that can be injected in your api proxies.
 
 this code excerpt show how you can save a response received from an outgoing api call
 
@@ -59,9 +59,9 @@ this code excerpt show how you can save a response received from an outgoing api
 
 ### How to fake api responses 
 
-For faking api call responses you could implement a class that inherits from IFakeFactory.
+For faking api call responses implement a class that inherits from IFakeFactory.
 
-this code excerpt show how to use the FakeFactoryBase abstract class to implement your own factory
+in this code excerpt we create a factory by inheriting from the FakeFactoryBase abstract class.
 
 ```cs
 public class MyPlaybackFakeFactory : FakeFactoryBase
@@ -81,3 +81,4 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
             }
         }
 ```
+Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
