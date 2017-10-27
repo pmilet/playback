@@ -2,9 +2,9 @@
 An Asp.Net Core middleware library that simplifies the recording and playback of api calls by means of a simple playback identifier.
 Suitable for saving user interactions in production in order to be replayed locally, anytime and in isolation.
 
-###  How to record incoming Api requests 
+###  How to record and playback Api requests 
 
-Once your Asp.NetCore Api is configured for playback ( see sample in github repo ) you can start recording and replaying Api requests 
+Once your Asp.NetCore Api is configured for playback ( see quick start section or sample in github repo ) you can start recording and replaying Api requests 
 
 When the X-Playback-Mode request header is set to Record the request will be saved.
 
@@ -37,6 +37,72 @@ curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+S
 Notice that the response is exactly the same has before.
 
 When setting the x-playback-mode to None the request is not saved neither replayed. 
+
+
+### How to Quick Start 
+
+#### in your Startup class:
+
+Configure Playback middleware.
+
+```cs
+using pmilet.Playback;
+
+...
+
+public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            ...
+            
+            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
+            
+            ...
+            
+            //don't forget to return the service provider
+            return services.BuildServiceProvider();
+
+         }
+ 
+ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            
+            app.UsePlayback();
+          
+            ...
+        }
+      
+ ...
+            
+```
+
+#### in your appsetings.json
+
+Add playback storage section
+
+```json
+{
+  "PlaybackBlobStorage": {
+    "ConnectionString": "Your blob storage connection string",
+    "ContainerName": "playback"
+  },
+```
+#### in your controllers
+if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
+
+```cs
+using pmilet.Playback;
+
+  ...
+
+  [HttpGet]
+  [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
+  public async Task<string> Get()
+  
+  ...
+  
+```
+
 
 ### How to record responses received from outgoing requests
 
@@ -83,3 +149,4 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
         }
 ```
 Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
+
