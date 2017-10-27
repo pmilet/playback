@@ -83,3 +83,36 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
         }
 ```
 Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
+
+### code excerpts
+
+#### in Startup class
+```cs
+public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            ...
+            
+            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
+            
+            ...
+         }
+ 
+ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            
+            app.UsePlayback();
+          
+            ...
+        }
+            
+```
+
+#### in appsetings.json
+```json
+{
+  "PlaybackBlobStorage": {
+    "ConnectionString": "UseDevelopmentStorage=true",
+    "ContainerName": "playback"
+  },
+```
