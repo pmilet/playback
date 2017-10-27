@@ -2,9 +2,9 @@
 An Asp.Net Core middleware library that simplifies the recording and playback of api calls by means of a simple playback identifier.
 Suitable for saving user interactions in production in order to be replayed locally, anytime and in isolation.
 
-###  How to record incoming Api requests 
+###  How to record and playback Api requests 
 
-Once your Asp.NetCore Api is configured for playback ( see sample in github repo ) you can start recording and replaying Api requests 
+Once your Asp.NetCore Api is configured for playback ( see quick start section or sample in github repo ) you can start recording and replaying Api requests 
 
 When the X-Playback-Mode request header is set to Record the request will be saved.
 
