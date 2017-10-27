@@ -129,7 +129,8 @@ Add playback storage section
 #### in your controllers
 Decorate your controller for swagger to generate playback headers in swagger UI  
 
+```cs
   [HttpGet]
   [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
   public async Task<string> Get()
-  
+```
