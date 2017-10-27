@@ -84,10 +84,15 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
 ```
 Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
 
-### How to setup 
+### How to quick start 
 
-#### in Startup class:
+#### in your Startup class:
+
 ```cs
+using pmilet.Playback;
+
+...
+
 public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ...
@@ -108,7 +113,10 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
             
 ```
 
-#### in appsetings.json:
+#### in your appsetings.json
+
+Add playback storage section
+
 ```json
 {
   "PlaybackBlobStorage": {
@@ -116,3 +124,10 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
     "ContainerName": "playback"
   },
 ```
+#### in your controllers
+Decorate your controller for swagger to generate playback headers in swagger UI  
+
+  [HttpGet]
+  [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
+  public async Task<string> Get()
+  
