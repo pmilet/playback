@@ -78,7 +78,7 @@ Add playback storage section
 ```json
 {
   "PlaybackBlobStorage": {
-    "ConnectionString": "Your blob storage connection string",
+    "ConnectionString": "UseDevelopmentStorage=true",
     "ContainerName": "playback"
   },
 ```
