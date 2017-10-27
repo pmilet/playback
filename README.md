@@ -88,6 +88,8 @@ Note: this class should be registered in the Startup class IoC Container as IFak
 
 #### in your Startup class:
 
+Configure Playback middleware.
+
 ```cs
 using pmilet.Playback;
 
