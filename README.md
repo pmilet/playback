@@ -84,9 +84,9 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
 ```
 Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
 
-### code excerpts
+### How to setup 
 
-#### in Startup class
+#### in Startup class:
 ```cs
 public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -108,7 +108,7 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
             
 ```
 
-#### in appsetings.json
+#### in appsetings.json:
 ```json
 {
   "PlaybackBlobStorage": {
