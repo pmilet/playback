@@ -4,9 +4,7 @@ Suitable for saving user interactions in production in order to be replayed loca
 
 ###  How to record and playback Api requests 
 
-Once your Asp.NetCore Api is configured for playback ( see quick start section or sample in github repo ) you can start recording and replaying Api requests 
-
-When the X-Playback-Mode request header is set to Record the request will be saved.
+Once your Asp.NetCore Api is configured for playback ( see quick start section or sample in github repo ) you can start recording Api requests by setting the X-Playback-Mode header to Record. 
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
@@ -28,16 +26,13 @@ Response Headers
 }
 ```
 
-When the X-Playback-Mode request header is set to Playback the request will be replayed; you should also set the x-playback-id request header with the value received during recording.
+To replay set the X-Playback-Mode header to Playback and the X-Playback-Id header with the value received from the recording response.
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
 ```
 
-Notice that the response is exactly the same has before.
-
-When setting the x-playback-mode to None the request is not saved neither replayed. 
-
+When setting the x-playback-mode to None the playback functionality is bypassed. 
 
 ### How to Quick Start 
 
