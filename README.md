@@ -1,16 +1,22 @@
 # Asp.Net Core Playback
 An Asp.Net Core middleware library that simplifies the recording and playback of api calls by means of a simple playback identifier.
-Suitable for saving user interactions in production in order to be replayed locally, anytime and in isolation.
+
+### Purpose
+Save api requests in production, to be replayed in isolation for testing.
+Once we have a playbackId we can replay it anytime and anywhere. 
+We can record user requests to debug issues in our development environment.
+We can collect playbackId requests to simulate user load.
+We can use a playbackId for unit testing our api calls.
 
 ###  How to record and playback Api requests 
 
-Once your Asp.NetCore Api is configured for playback ( see quick start section or sample in github repo ) you can start recording Api requests by setting the X-Playback-Mode header to Record. 
+Once your Asp.NetCore Api is configured for playback ( see quick start section below or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
 ```
 
-then a  x-playback-id response header will be received. 
+then a  x-playback-id response header will be returned. 
 
 ```javascript
 Response Headers
@@ -143,5 +149,7 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
             }
         }
 ```
-Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
+### PlaybackId format
+
+
 
