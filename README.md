@@ -38,6 +38,72 @@ Notice that the response is exactly the same has before.
 
 When setting the x-playback-mode to None the request is not saved neither replayed. 
 
+
+### How to Quick Start 
+
+#### in your Startup class:
+
+Configure Playback middleware.
+
+```cs
+using pmilet.Playback;
+
+...
+
+public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            ...
+            
+            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
+            
+            ...
+            
+            //don't forget to return the service provider
+            return services.BuildServiceProvider();
+
+         }
+ 
+ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            
+            app.UsePlayback();
+          
+            ...
+        }
+      
+ ...
+            
+```
+
+#### in your appsetings.json
+
+Add playback storage section
+
+```json
+{
+  "PlaybackBlobStorage": {
+    "ConnectionString": "Your blob storage connection string",
+    "ContainerName": "playback"
+  },
+```
+#### in your controllers
+if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
+
+```cs
+using pmilet.Playback;
+
+  ...
+
+  [HttpGet]
+  [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
+  public async Task<string> Get()
+  
+  ...
+  
+```
+
+
 ### How to record responses received from outgoing requests
 
 For recording responses from outgoing requests you should use the PlaybackContext class that can be injected in your api proxies.
@@ -84,62 +150,3 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
 ```
 Note: this class should be registered in the Startup class IoC Container as IFakeFactory 
 
-### How to quick start 
-
-#### in your Startup class:
-
-Configure Playback middleware.
-
-```cs
-using pmilet.Playback;
-
-...
-
-public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            ...
-            
-            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
-            
-            ...
-         }
- 
- public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            ...
-            
-            app.UsePlayback();
-          
-            ...
-        }
-      
- ...
-            
-```
-
-#### in your appsetings.json
-
-Add playback storage section
-
-```json
-{
-  "PlaybackBlobStorage": {
-    "ConnectionString": "UseDevelopmentStorage=true",
-    "ContainerName": "playback"
-  },
-```
-#### in your controllers
-if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
-
-```cs
-using pmilet.Playback;
-
-  ...
-
-  [HttpGet]
-  [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
-  public async Task<string> Get()
-  
-  ...
-  
-```
