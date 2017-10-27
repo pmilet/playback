@@ -5,7 +5,7 @@ An Asp.Net Core middleware library for recording and replaying api calls by mean
 Save api requests in production, to be replayed in isolation for testingtesting using the recorded playback id.
 Once we have a playback id we can replay it anytime and anywhere. We can record user requests to debug issues in our development environment, we can collect playbackId requests to simulate user load, or use a playback id for unit testing our api methods.
 
-###  How to record and playback Api requests 
+###  How to record and playback Api requests?
 
 Once your Asp.NetCore Api is configured for playback ( see quick start section below or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
 
@@ -37,7 +37,7 @@ curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+S
 
 When setting the x-playback-mode to None the playback functionality is bypassed. 
 
-### How to Quick Start 
+### How to Quick Start?
 
 In your Startup class:
 
@@ -102,7 +102,7 @@ using pmilet.Playback;
   
 ```
 
-### How to record responses received from outgoing requests
+### How to record responses received from outgoing requests?
 
 For recording responses from outgoing requests you should use the PlaybackContext class that can be injected in your api proxies.
 
@@ -122,7 +122,7 @@ this code excerpt show how you can save a response received from an outgoing api
      
 ```
 
-### How to fake api responses 
+### How to fake api responses?
 
 For faking api call responses implement a class that inherits from IFakeFactory.
 
