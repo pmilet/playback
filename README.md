@@ -112,6 +112,8 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
           
             ...
         }
+      
+ ...
             
 ```
 
@@ -130,7 +132,14 @@ Add playback storage section
 if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
 
 ```cs
+using pmilet.Playback;
+
+  ...
+
   [HttpGet]
   [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
   public async Task<string> Get()
+  
+  ...
+  
 ```
