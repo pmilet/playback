@@ -42,7 +42,7 @@ When setting the x-playback-mode to None the playback functionality is bypassed.
 
 ### How to Quick Start 
 
-#### in your Startup class:
+In your Startup class:
 
 Configure Playback middleware.
 
@@ -77,7 +77,7 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
             
 ```
 
-#### in your appsetings.json
+In your appsetings.json file:
 
 Add playback storage section
 
@@ -88,8 +88,9 @@ Add playback storage section
     "ContainerName": "playback"
   },
 ```
-#### in your controllers
-if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
+In your controllers:
+
+if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
 
 ```cs
 using pmilet.Playback;
@@ -103,7 +104,6 @@ using pmilet.Playback;
   ...
   
 ```
-
 
 ### How to record responses received from outgoing requests
 
@@ -149,6 +149,7 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
             }
         }
 ```
+
 ### PlaybackId format
 
 
