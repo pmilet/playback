@@ -59,8 +59,6 @@ namespace pmilet.Playback
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
 
                 await blockBlob.UploadTextAsync(JsonConvert.SerializeObject(playbackMessage));
-                blockBlob.Properties.ContentType = playbackMessage.ContentType;
-                await blockBlob.SetPropertiesAsync();
                 foreach (string key in playbackMessage.Metadata.Keys)
                     blockBlob.Metadata.Add(key, playbackMessage.Metadata[key]);
                 await blockBlob.SetMetadataAsync();
@@ -97,16 +95,7 @@ namespace pmilet.Playback
                 using (var memoryStream = new MemoryStream())
                 {
                     await blockBlob.DownloadToStreamAsync(memoryStream);
-                    contentType = blockBlob.Properties.ContentType;
-                    if (blockBlob.Properties.ContentType!=null && 
-                        blockBlob.Properties.ContentType.Contains("text"))
-                        bodyString = Encoding.UTF8.GetString(memoryStream.ToArray());
-                    else
-                    {
-                        string encodedString = Encoding.UTF8.GetString(memoryStream.ToArray());
-                        var bytes = System.Convert.FromBase64String(encodedString);
-                        bodyString = Encoding.UTF8.GetString(bytes);
-                    }
+                    bodyString = Encoding.UTF8.GetString(memoryStream.ToArray());
                 }
                 return JsonConvert.DeserializeObject<PlaybackMessage>(bodyString);
             }

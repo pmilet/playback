@@ -39,6 +39,8 @@ namespace ApiGateway_Sample
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
             });
+            
+            //don't forget to return the service provider
             return services.BuildServiceProvider();
 
         }
