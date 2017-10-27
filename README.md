@@ -148,6 +148,9 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
 ```
 
 ### PlaybackId format
+The playback id carries important context information in itself. 
+This information can be used to organize the playback ids. 
+
 
 
 
