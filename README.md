@@ -1,5 +1,5 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library that simplifies the recording and playback of api calls by means of a playback identifier.
+An Asp.Net Core middleware library for recording and replaying api calls by means of a playback identifier.
 
 ### Purpose
 Save api requests in production, to be replayed in isolation for testing.
