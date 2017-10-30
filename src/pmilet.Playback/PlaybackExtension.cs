@@ -16,7 +16,18 @@ namespace pmilet.Playback
         public static void AddPlayback(this IServiceCollection services, IConfigurationRoot configuration,
            IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
         {
-            AddPlayback(services, configuration, playbackStorageService, fakeFactory);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IPlaybackContext, PlaybackContext>();
+            if (playbackStorageService == null)
+            {
+                playbackStorageService = new PlaybackBlobStorageService(configuration);
+            }
+            services.AddScoped<IPlaybackStorageService>(provider => playbackStorageService);
+            if (fakeFactory == null)
+            {
+                fakeFactory = new DefaultFakeFactory();
+            }
+            services.AddScoped(typeof(IFakeFactory), fakeFactory.GetType());
         }
 
         public static void AddPlayback(this IServiceCollection services, IConfiguration configuration, 

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System.Net;
 using System.Threading.Tasks;
+using System;
+using System.IO;
 
 namespace pmilet.Playback
 {
@@ -49,7 +51,23 @@ namespace pmilet.Playback
 
         private async Task FakeHandler(HttpContext httpContext)
         {
-            _fakeFactory.GenerateFakeResponse(httpContext);
+            try
+            {
+                _fakeFactory.GenerateFakeResponse(httpContext);
+            }
+            catch (NotImplementedException ex)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
+                await httpContext.Response.WriteAsync(ex.Message);
+                return;
+            }
+            catch (Exception ex)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await httpContext.Response.WriteAsync(ex.Message);
+                return;
+            }
+
             if (httpContext.Response.Body == null)
                 await _next.Invoke(httpContext);
         }
