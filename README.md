@@ -1,9 +1,10 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library for recording and replaying api calls by means of a playback identifier.
+An Asp.Net Core middleware library for recording and replaying received requests by means of a playback identifier.
 
 ### Purpose
-Save api requests in production, to be replayed in isolation for testingtesting using the recorded playback id.
-Once we have a playback id we can replay it anytime and anywhere. We can record user requests to debug issues in our development environment, we can collect playbackId requests to simulate user load, or use a playback id for unit testing our api methods.
+To record api requests in production, to be replayed in any environment using the recorded playback id.
+Once we have a playback id we can replay it anytime and anywhere: 
+We can record user requests to debug issues in our development environment, or can collect playbackId suitesto replay them to simulate user scenarios or load. We can use the playback id for unit testing api methods expected behavior etc.
 
 ###  How to record and playback Api requests?
 
@@ -148,8 +149,18 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
 ```
 
 ### PlaybackId format
-The playback id carries important context information in itself. 
-This information can be used to organize the playback ids. 
+The playback id is composed of differents parrts each carrying important context information. 
+This information can be used to contextualize and organize the recorded playback ids.
+This is the playback id parts : <PlaybackContextInfo>_<AssemblyName>_v<PlaybackVersion>_<RequestPath>_<RequestMethod>_<RequestContextHash>
+  
+  The PlayContextInfo comes from the X-Playback-RequestContext header.
+  The assemblyName is the web api assembly Name. 
+  The PlaybackVersion comes from the X-Playback-Version header.
+  The RequestPath is the request path url encoded
+  The RequestMethod is the request http verb
+  The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
+  
+  
 
 
 
