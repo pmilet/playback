@@ -53,7 +53,7 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ...
             
-            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
+            services.AddPlayback(Configuration);
             
             ...
             
@@ -125,10 +125,7 @@ this code excerpt show how you can save a response received from an outgoing api
 
 ### How to fake api responses?
 
-For faking api call responses implement a class that inherits from IFakeFactory.
-
-in this code excerpt we create a factory by inheriting from the FakeFactoryBase abstract class.
-
+For faking api call responses implement a class that inherits from IFakeFactory like in the following example:
 ```cs
 public class MyPlaybackFakeFactory : FakeFactoryBase
     {
@@ -146,6 +143,16 @@ public class MyPlaybackFakeFactory : FakeFactoryBase
                     throw new NotImplementedException("fake method not found");
             }
         }
+```
+
+Then don't forget to register your fake factory duting initialization:
+
+```cs
+public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc().AddControllersAsServices();
+            
+            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
 ```
 
 ### PlaybackId format
