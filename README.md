@@ -169,8 +169,10 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 ### PlaybackId format
 The playback id is composed of differents parrts each carrying important context information. 
 This information can be used to contextualize and organize the recorded playback ids.
-This is the playback id parts : <PlaybackContextInfo>_<AssemblyName>_v<PlaybackVersion>_<RequestPath>_<RequestMethod>_<RequestContextHash>
-  
+This is the playback id parts : 
+
+"<PlaybackContextInfo>_<AssemblyName>_v<PlaybackVersion>_<RequestPath>_<RequestMethod>_<RequestContextHash>"
+  
   The PlayContextInfo comes from the X-Playback-RequestContext header.
   The assemblyName is the web api assembly Name. 
   The PlaybackVersion comes from the X-Playback-Version header.
