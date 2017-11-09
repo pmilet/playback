@@ -3,7 +3,7 @@ An Asp.Net Core middleware library for recording http requests and replaying the
 
 ### Purpose
 Record your webapi http requests to be replayed anytime in any environment using a recorded playback id.
-With a playback id we can debug issues recorded in our production environment to be reproduced in our development environment, we can use a playback id for unit testing our api methods, we can record user interactions for collecting a sequence of playbackIds to be used as regression or load tests.
+With a playback id we can debug issues recorded in our production environment by reproducing it in our development environment, we can use a playback id for unit testing our api methods, we can record user interactions for collecting a sequence of playbackIds to be used as regression or load tests.
 
 ###  How to record and playback Api requests?
 
