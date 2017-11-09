@@ -3,7 +3,7 @@ An Asp.Net Core middleware library for recording http requests and replaying the
 
 ### Purpose
 Record your webapi http requests to be replayed anytime in any environment using a recorded playback id.
-With a playback id we can debug issues recorded in our production environment by reproducing it in our development environment, we can use a playback id for unit testing our api methods, we can record user interactions for collecting a sequence of playbackIds to be used as regression or load tests.
+With a playback id we can debug issues recorded in our production environment and reproduce it in our development environment, we can use the playbackid as input to unit testing our api methods, we can record user interactions to obtain a sequence of playbackids to be used for a regression or load test.
 
 ###  How to record and playback Api requests?
 
@@ -169,16 +169,16 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 ### PlaybackId format
 The playback id is composed of differents parrts each carrying important context information. 
 This information can be used to contextualize and organize the recorded playback ids.
-This is the playback id parts : 
+This are the playback id parts separated by an underscore : 
 
-"<PlaybackContextInfo>_<AssemblyName>_v<PlaybackVersion>_<RequestPath>_<RequestMethod>_<RequestContextHash>"
+PlaybackContextInfo_AssemblyName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash"
   
-  The PlayContextInfo comes from the X-Playback-RequestContext header.
-  The assemblyName is the web api assembly Name. 
-  The PlaybackVersion comes from the X-Playback-Version header.
-  The RequestPath is the request path url encoded
-  The RequestMethod is the request http verb
-  The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
+  #### The PlayContextInfo comes from the X-Playback-RequestContext header.
+  #### The assemblyName is the web api assembly Name. 
+  #### The PlaybackVersion comes from the X-Playback-Version header.
+  #### The RequestPath is the request path url encoded
+  #### The RequestMethod is the request http verb
+  #### The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
   
   
 
