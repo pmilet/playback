@@ -173,12 +173,12 @@ This are the playback id parts separated by an underscore :
 
 PlaybackContextInfo_AssemblyName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash"
   
-  #### The PlayContextInfo comes from the X-Playback-RequestContext header.
-  #### The assemblyName is the web api assembly Name. 
-  #### The PlaybackVersion comes from the X-Playback-Version header.
-  #### The RequestPath is the request path url encoded
-  #### The RequestMethod is the request http verb
-  #### The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
+  - The PlayContextInfo comes from the X-Playback-RequestContext header.
+  - The assemblyName is the web api assembly Name. 
+  - The PlaybackVersion comes from the X-Playback-Version header.
+  - The RequestPath is the request path url encoded
+  - The RequestMethod is the request http verb
+  - The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
   
   
 
