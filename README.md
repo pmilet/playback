@@ -171,14 +171,22 @@ The playback id is composed of differents parrts each carrying important context
 This information can be used to contextualize and organize the recorded playback ids.
 This are the playback id parts separated by an underscore : 
 
-PlaybackContextInfo_AssemblyName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash"
+PlaybackContextInfo_AssemblyName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
   
   - The PlayContextInfo comes from the X-Playback-RequestContext header.
-  - The assemblyName is the web api assembly Name. 
+  - The AssemblyName is the web api assembly Name. 
   - The PlaybackVersion comes from the X-Playback-Version header.
   - The RequestPath is the request path url encoded
   - The RequestMethod is the request http verb
   - The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
+  
+  for example this playbackid  DemoUser_ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046 can be descompsed as:
+  - PlayContextInfo = DemoUser
+  - AssemblyName = ApiGateway+Sample
+  - PlaybackVersion = v1.0
+  - RequestPath = Hello%252Fhello
+  - RequestMethod = GET
+  - RequestContextHash = 757602046
   
   
 
