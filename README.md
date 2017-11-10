@@ -41,7 +41,7 @@ When setting the x-playback-mode to None the playback functionality is bypassed.
 The playback id is composed of differents parts each one carrying important context information. 
 The playback id parts are separated by an underscore : 
 
-[PlaybackContextInfo]_[ApiName]_[PlaybackVersion]_[RequestPath]_[RequestMethod]_[RequestContextHash]
+PlaybackContextInfo_ApiName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
   
   - The PlayContextInfo comes from the X-Playback-RequestContext header.
   - The ApiName is the web api Name. 
