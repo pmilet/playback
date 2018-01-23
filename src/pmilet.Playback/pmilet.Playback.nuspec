@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>pmilet.HttpPlayback</id>
+    <id>pmilet.Playback</id>
     <version>1.1.0</version>
     <title>pmilet http Playback</title>
     <authors>Pierre Milet</authors>
@@ -36,6 +36,6 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="bin\Release\**\pmilet.HttpPlayback.dll" target="lib" />
+    <file src="bin\Release\**\pmilet.Playback.dll" target="lib" />
   </files>
 </package>

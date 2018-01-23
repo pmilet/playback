@@ -1,13 +1,13 @@
 ﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-using pmilet.HttpPlayback.Core;
+using pmilet.Playback.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
     public static class PlaybackExtension
     {

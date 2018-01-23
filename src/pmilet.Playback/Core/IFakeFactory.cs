@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 using Microsoft.AspNetCore.Http;
 
-namespace pmilet.HttpPlayback.Core
+namespace pmilet.Playback.Core
 {
     public interface IFakeFactory
     {

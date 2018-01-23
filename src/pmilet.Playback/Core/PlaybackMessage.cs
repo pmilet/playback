@@ -5,7 +5,7 @@ using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.IO;
 
-namespace pmilet.HttpPlayback.Core
+namespace pmilet.Playback.Core
 {
     public class PlaybackMessage
     {       

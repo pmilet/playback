@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\pmilet.HttpPlayback\pmilet.HttpPlayback.csproj" />
+    <ProjectReference Include="..\..\src\pmilet.Playback\pmilet.Playback.csproj" />
   </ItemGroup>
 
 </Project>

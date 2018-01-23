@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
     public static class PlaybackIdExtension
     {

@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace pmilet.HttpPlayback.Core
+namespace pmilet.Playback.Core
 {
 
     public interface IPlaybackContext

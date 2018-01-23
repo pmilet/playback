@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
-using pmilet.HttpPlayback.Core;
+using pmilet.Playback.Core;
 using Newtonsoft.Json;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
     public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {

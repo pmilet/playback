@@ -5,11 +5,11 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
-using pmilet.HttpPlayback.Core;
+using pmilet.Playback.Core;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
     public class PlaybackContext : IPlaybackContext
     {

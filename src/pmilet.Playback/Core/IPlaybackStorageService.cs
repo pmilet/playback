@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace pmilet.HttpPlayback.Core
+namespace pmilet.Playback.Core
 {
     public interface IPlaybackStorageService
     {

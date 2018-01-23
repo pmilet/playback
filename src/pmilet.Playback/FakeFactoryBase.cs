@@ -4,14 +4,14 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text;
-using pmilet.HttpPlayback.Core;
+using pmilet.Playback.Core;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
     public abstract class FakeFactoryBase : IFakeFactory
     {

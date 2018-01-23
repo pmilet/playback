@@ -1,4 +1,4 @@
-﻿using pmilet.HttpPlayback.Core;
+﻿using pmilet.Playback.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace pmilet.HttpPlayback
+namespace pmilet.Playback
 {
-        [EventSource(Name = "pmilet.HttpPlayback")]
+        [EventSource(Name = "pmilet.Playback")]
         public class PlaybackEventSource : EventSource
         {
             public static PlaybackEventSource Current = new PlaybackEventSource();

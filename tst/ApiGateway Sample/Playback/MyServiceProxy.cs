@@ -1,4 +1,4 @@
-﻿using pmilet.HttpPlayback.Core;
+﻿using pmilet.Playback.Core;
 using System.Threading.Tasks;
 
 namespace ApiGateway_Sample
