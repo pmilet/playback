@@ -35,7 +35,7 @@ namespace ApiGateway_Sample
 
         private string HelloGet(string request)
         {
-            return "Hello FAKE";
+            return "This is a inbound fake response";
         }
 
         private string HelloPost(HelloRequest request)

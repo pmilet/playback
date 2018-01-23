@@ -23,7 +23,12 @@ namespace ApiGateway_Sample
 
         public async Task<MyServiceResponse> Execute( MyServiceRequest command)
         {
-            var result =  new MyServiceResponse() {  Output = $"MyService received input: {command.Input}" };
+            var result = new MyServiceResponse() { Output = $"This is is a real response from MyServiceProxy" };
+            if (_playbackContext.Fake == "Outbound")
+            {
+                result = new MyServiceResponse() { Output = $"This is a fake outbound response from MyServiceProxy" };
+            }
+
             if (_playbackContext.IsRecord)
             {
                 await _playbackContext.RecordResult<MyServiceResponse>(result);
@@ -32,6 +37,9 @@ namespace ApiGateway_Sample
             {
                 return await _playbackContext.PlaybackResult<MyServiceResponse>();
             }
+
+
+
             return result;
         }
     }
