@@ -3,12 +3,13 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace pmilet.Playback.Core
+namespace pmilet.HttpPlayback.Core
 {
 
     public interface IPlaybackContext
     {
         string PlaybackId { get; }
+        string Fake{ get; }
         PlaybackMode PlaybackMode { get; }
         Task RecordResult<T>(T result, string fileNameOverride = null);
         Task<T> PlaybackResult<T>(string fileNameOverride = null);

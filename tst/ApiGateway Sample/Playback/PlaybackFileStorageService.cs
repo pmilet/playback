@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using pmilet.Playback;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback;
+using pmilet.HttpPlayback.Core;
 using System;
 using System.IO;
 using System.Security.AccessControl;

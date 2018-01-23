@@ -1,11 +1,11 @@
 ﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 using Newtonsoft.Json;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback.Core;
 using System;
 using System.Threading.Tasks;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public abstract class PlaybackStorageServiceBase
     {
@@ -14,8 +14,19 @@ namespace pmilet.Playback
             await UploadToStorageAsync(fileId, "", "", content, elapsedTime);
         }
 
+        public async Task UploadToStorageAsync(string fileId, object obj, long elapsedTime = 0)
+        {
+            var content = JsonConvert.SerializeObject(obj);
+            await UploadToStorageAsync(fileId, content, elapsedTime);
+        }
+
         public abstract Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0);
 
+        public async Task<T> ReplayFromStorageAsync<T>(string playbackId)
+        {
+            var message = await DownloadFromStorageAsync( playbackId);
+            return JsonConvert.DeserializeObject<T>(message.BodyString);
+        }
 
         public async Task<T> ReplayFromStorageAsync<T>(PlaybackMode playbackMode, string playbackId)
         {

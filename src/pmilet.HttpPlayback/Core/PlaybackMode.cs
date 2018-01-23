@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace pmilet.Playback.Core
+namespace pmilet.HttpPlayback.Core
 {
     public enum PlaybackMode
     {
@@ -13,7 +13,6 @@ namespace pmilet.Playback.Core
         Record,
         Playback,
         PlaybackReal,
-        PlaybackChaos,
-        Fake
+        PlaybackChaos
     }
 }

@@ -3,7 +3,7 @@
 using System;
 using System.Diagnostics.Tracing;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {  
     public class PlaybackStorageException : Exception
      {

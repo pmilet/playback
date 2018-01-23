@@ -1,6 +1,6 @@
 ﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-using pmilet.Playback;
+using pmilet.HttpPlayback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +16,20 @@ namespace ApiGateway_Sample
 
     public class MyPlaybackFakeFactory : FakeFactoryBase
     {
-        public override void GenerateFakeResponse(HttpContext context)
+        public override bool GenerateFakeResponse(HttpContext context)
         {
             switch (context.Request.Path.Value.ToLower())
             {
                 case "/api/hello":
                     if (context.Request.Method == "POST")
-                        GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
+                        return GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
                     else if (context.Request.Method == "GET")
-                        GenerateFakeResponse<string, string>(context, HelloGet);
+                        return GenerateFakeResponse<string, string>(context, HelloGet);
                     break;
                 default:
-                    throw new NotImplementedException("fake method not found");
+                    return false;
             }
+            return false;
         }
 
 

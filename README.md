@@ -65,7 +65,7 @@ In your Startup class:
 Configure Playback middleware.
 
 ```cs
-using pmilet.Playback;
+using pmilet.HttpPlayback;
 
 ...
 
@@ -123,7 +123,7 @@ In your controllers:
 if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
 
 ```cs
-using pmilet.Playback;
+using pmilet.HttpPlayback;
 
   ...
 

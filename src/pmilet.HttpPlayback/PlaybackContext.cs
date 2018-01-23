@@ -5,11 +5,11 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback.Core;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public class PlaybackContext : IPlaybackContext
     {
@@ -27,11 +27,38 @@ namespace pmilet.Playback
 
         public PlaybackContext(IHttpContextAccessor accessor, IPlaybackStorageService playbackStorageService)
         {
-            if (accessor?.HttpContext != null)
+            if (accessor == null)
+                throw new Exception("null Http Context accessor when creating Playback Context");
+
+            if (accessor.HttpContext != null)
                 ReadHttpContext(accessor.HttpContext);
 
             _playbackStorageService = playbackStorageService;
         }
+
+        public static void ChangePlaybackMode( PlaybackMode newPlaybackMode)
+        {
+            DefaultPlaybackMode = newPlaybackMode;
+            PlaybackEventSource.Current.PlaybackModeChanged(newPlaybackMode);
+        }
+
+        public static void ChangePlaybackRequestContext( string newRequestPlaybackContext )
+        {
+            DefaultPlaybackRequestContext = newRequestPlaybackContext;
+            PlaybackEventSource.Current.PlaybackRequestContextChanged(newRequestPlaybackContext);
+        }
+
+        public static void ChangePlaybackFake(string newPlaybackFake)
+        {
+            DefaultPlaybackFake = newPlaybackFake;
+            PlaybackEventSource.Current.PlaybackFakeChanged(newPlaybackFake);
+        }
+
+        public static string DefaultPlaybackRequestContext { get; set; }
+
+        public static PlaybackMode DefaultPlaybackMode {get;  internal set;}
+
+        public static string DefaultPlaybackFake { get; internal set; }
 
         public string PlaybackId
         {
@@ -72,48 +99,48 @@ namespace pmilet.Playback
 
         internal void ReadHttpContext(HttpContext context)
         {
+            PlaybackMode = DefaultPlaybackMode;
             _context = context;
             Microsoft.Extensions.Primitives.StringValues headerValues;
 
             var keyfound = context.Request.Headers.TryGetValue("X-Playback-RequestContext", out headerValues);
-            if (keyfound)
-            {
-                ContextInfo = headerValues.FirstOrDefault();
-            }
-
+            RequestContextInfo = keyfound ? RequestContextInfo = headerValues.FirstOrDefault() : DefaultPlaybackRequestContext;
+            
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Mode", out headerValues);
+            PlaybackMode pbm = PlaybackMode.None;
             if (keyfound)
             {
-                PlaybackMode pbm = PlaybackMode.None;
                 Enum.TryParse<PlaybackMode>(headerValues.FirstOrDefault(), out pbm);
                 PlaybackMode = pbm;
             }
 
+            keyfound = context.Request.Headers.TryGetValue("X-Playback-Fake", out headerValues);
+            Fake = keyfound ? Fake = headerValues.FirstOrDefault() : DefaultPlaybackFake;
+
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Version", out headerValues);
-            if (keyfound)
-                Version = headerValues.FirstOrDefault();
-            else
-                Version = "1.0";
+            Version = keyfound ? headerValues.FirstOrDefault() : string.Empty;
 
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Id", out headerValues);
-            if (keyfound)
-                PlaybackId = headerValues.FirstOrDefault();
+            PlaybackId = keyfound ? headerValues.FirstOrDefault() : string.Empty;
         }
 
-        internal void GenerateNewPlaybackId()
+        internal string GenerateNewPlaybackId()
         {
-            PlaybackId = WebUtility.UrlEncode(ContextInfo + "_" + _assemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode);
+            if(_context == null )
+                throw new Exception("null HttpContext when generating new playback Id");
+
+            _context.Request.EnableRewind();
+            _requestBodyString = ReadToEnd(_context.Request.Body);
+            PlaybackId = WebUtility.UrlEncode(RequestContextInfo + "_" + _assemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode);
+
+            return PlaybackId;
         }
 
         internal string Content
         {
             get
             {
-                if (string.IsNullOrEmpty(_requestBodyString))
-                {
-                    _context.Request.EnableRewind();
-                    _requestBodyString = ReadToEnd(_context.Request.Body);
-                }
+               
                 return _requestBodyString;
             }
         }
@@ -127,7 +154,6 @@ namespace pmilet.Playback
 
         private string RequestPath
         {
-            //TODO: check
             get { return WebUtility.UrlEncode(_context.Request.Path.Value.Replace("api", "").Trim('/')); }
         }
 
@@ -144,11 +170,17 @@ namespace pmilet.Playback
             }
         }
 
-        private string ContextInfo
+        private string RequestContextInfo
         {
             get;set;
         }
-        
+
+        public string Fake
+        {
+            get; set;
+        }
+
+
         private string QueryString
         {
             get

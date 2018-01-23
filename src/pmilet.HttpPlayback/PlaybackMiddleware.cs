@@ -1,6 +1,6 @@
 ﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System.Net;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System;
 using System.IO;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public class PlaybackMiddleware 
     {
@@ -27,14 +27,24 @@ namespace pmilet.Playback
 
         public async Task Invoke(HttpContext httpContext)
         {
+            if (httpContext == null)
+                throw new Exception("null Http Context found when invoking Playback Middleware");
+
             _playbackContext.ReadHttpContext(httpContext );
 
             httpContext.Request.EnableRewind();
+
+            switch (_playbackContext.Fake)
+            {
+                case "Inbound":
+                    await FakeHandler(httpContext);
+                    return;
+                default:
+                    break;
+            }
+
             switch (_playbackContext.PlaybackMode)
             {
-                case PlaybackMode.Fake:
-                    await FakeHandler(httpContext);
-                    break;
                 case PlaybackMode.Record:
                     await RecordHandler(httpContext);
                     break;
@@ -51,40 +61,70 @@ namespace pmilet.Playback
 
         private async Task FakeHandler(HttpContext httpContext)
         {
+            bool handled = false;
             try
             {
-                _fakeFactory.GenerateFakeResponse(httpContext);
+                handled = _fakeFactory.GenerateFakeResponse(httpContext);
             }
             catch (NotImplementedException ex)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
                 await httpContext.Response.WriteAsync(ex.Message);
-                return;
+                handled = true;
             }
             catch (Exception ex)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await httpContext.Response.WriteAsync(ex.Message);
-                return;
+                handled = true;
             }
 
-            if (httpContext.Response.Body == null)
+            if (!handled)
                 await _next.Invoke(httpContext);
         }
 
         private async Task RecordHandler(HttpContext httpContext)
         {
             var pathDecode = WebUtility.UrlDecode(httpContext.Request.Path);
-            _playbackContext.GenerateNewPlaybackId();
+            var playbackId = _playbackContext.GenerateNewPlaybackId();
+            PlaybackEventSource.Current.NewPlaybackMessage("Record Playback", playbackId);
+
             await _messageStorageService.UploadToStorageAsync(_playbackContext.PlaybackId, pathDecode, httpContext.Request.QueryString.Value, _playbackContext.Content);
             httpContext.Request.Body.Position = 0;
             httpContext.Response.OnStarting(state =>
             {
                 var httpContextState = (HttpContext)state;
-                httpContextState.Response.Headers.Add("X-Playback-Id", new[] { _playbackContext.PlaybackId });
+                httpContextState.Response.Headers.Add("X-Playback-Id", new[] { _playbackContext.PlaybackId });                
                 return Task.FromResult(0);
             }, httpContext);
             await _next.Invoke(httpContext);
+        }
+
+        private readonly RequestDelegate next;
+        private async Task<string> ReadBody(HttpContext context)
+        {
+            Stream originalBody = context.Response.Body;
+            string responseBody =null;
+            try
+            {
+                using (var memStream = new MemoryStream())
+                {
+                    context.Response.Body = memStream;
+
+                    await next(context);
+
+                    memStream.Position = 0;
+                    responseBody = new StreamReader(memStream).ReadToEnd();
+
+                    memStream.Position = 0;
+                    await memStream.CopyToAsync(originalBody);
+                }
+                return responseBody;
+            }
+            finally
+            {
+                context.Response.Body = originalBody;
+            }
         }
 
         private async Task PlaybackHandler(HttpContext httpContext)

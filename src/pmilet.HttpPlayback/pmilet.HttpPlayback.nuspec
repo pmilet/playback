@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>pmilet.Playback</id>
-    <version>1.0.10</version>
-    <title>pmilet Playback</title>
+    <id>pmilet.HttpPlayback</id>
+    <version>1.1.0</version>
+    <title>pmilet http Playback</title>
     <authors>Pierre Milet</authors>
     <owners>Pierre Milet</owners>
     <licenseUrl>https://github.com/pmilet/playback/blob/master/LICENSE</licenseUrl>
@@ -13,7 +13,7 @@
     <description>an Asp.Net Core middleware library that simplifies the recording and playback of HTTP requests and responses. Suitable for reproducing user interactions in automated tests suites or for reproducing production issues in your development environment.</description>
     <releaseNotes>new file storage service</releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>Asp.NetCore Playback Replay</tags>
+    <tags>Asp.NetCore Http Playback Replay</tags>
     <dependencies>
       <dependency id="Microsoft.AspNetCore" version="1.1.3" />
       <dependency id="Microsoft.AspNetCore.WebUtilities" version="1.1.2" />
@@ -36,6 +36,6 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="bin\Release\**\pmilet.Playback.dll" target="lib" />
+    <file src="bin\Release\**\pmilet.HttpPlayback.dll" target="lib" />
   </files>
 </package>

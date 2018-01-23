@@ -4,23 +4,24 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback.Core;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public abstract class FakeFactoryBase : IFakeFactory
     {
-        protected void GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
+        protected bool GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
         {
             dynamic request = context.Request.Method != "GET" ? Deserialize<TRequest>(context.Request.Body) : GetFromQueryString(context, typeof(TRequest));
             var response = func(request);
             Stream fakeResponseStream = Serialize<TResponse>(response);
             fakeResponseStream.CopyToAsync(context.Response.Body);
+            return true;
         }
 
         protected T Deserialize<T>(Stream body)
@@ -67,6 +68,6 @@ namespace pmilet.Playback
             return obj.ConvertFromString(null, CultureInfo.InvariantCulture, ValueToConvert);
         }
 
-        public abstract void GenerateFakeResponse(HttpContext context);
+        public abstract bool GenerateFakeResponse(HttpContext context);
     }
 }

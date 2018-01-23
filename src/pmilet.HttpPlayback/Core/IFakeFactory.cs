@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 using Microsoft.AspNetCore.Http;
 
-namespace pmilet.Playback.Core
+namespace pmilet.HttpPlayback.Core
 {
     public interface IFakeFactory
     {
-        void GenerateFakeResponse(HttpContext context);
+        bool GenerateFakeResponse(HttpContext context);
     }
 }

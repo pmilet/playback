@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using pmilet.Playback;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback;
+using pmilet.HttpPlayback.Core;
 using System;
 
 namespace ApiGateway_Sample

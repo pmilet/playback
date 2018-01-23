@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2017 Pierre Milet. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-using pmilet.Playback;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback;
+using pmilet.HttpPlayback.Core;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public class PlaybackSwaggerFilter : IOperationFilter
     {
@@ -43,6 +43,15 @@ namespace pmilet.Playback
                 Type = "string",
                 Enum = Enum.GetNames(typeof(PlaybackMode)),
                 Description = "PlayBack mode to determine how to handle the request"
+            });
+            operation.Parameters.Add(new NonBodyParameter
+            {
+                Name = "X-Playback-Fake",
+                In = "header",
+                Required = false,
+                Type = "string",
+                Enum = new List<object>() { "None", "Inbound", "Outbound" },
+                Description = "Request to fake incoming requests and Proxy to fake outgoing requests"
             });
             operation.Parameters.Add(new NonBodyParameter
             {

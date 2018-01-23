@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
-using pmilet.Playback.Core;
+using pmilet.HttpPlayback.Core;
 using Newtonsoft.Json;
 
-namespace pmilet.Playback
+namespace pmilet.HttpPlayback
 {
     public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
@@ -31,7 +31,7 @@ namespace pmilet.Playback
 
         public PlaybackBlobStorageService(IConfiguration configuration)
         {
-            var section = configuration.GetSection("PlaybackBlobStorage");
+            var section = configuration.GetSection("Switch.Diagnostics").GetSection("PlaybackBlobStorage");
             _connectionString = section.GetSection("ConnectionString").Value;
             _containerName = section.GetSection("ContainerName").Value;
         }
