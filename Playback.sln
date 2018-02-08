@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway Sample", "tst\ApiGateway Sample\ApiGateway Sample.csproj", "{CCA7E1DD-CF4A-48F2-B4B5-48360B813066}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{E98DA495-144B-4E71-A48E-0CFDF8667175}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pmilet.Playback", "src\pmilet.Playback\pmilet.Playback.csproj", "{62A32EB4-8F55-4644-9FC5-0F449D88176B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{203F4BB3-4B70-4EBB-A77D-339E3300428F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CCA7E1DD-CF4A-48F2-B4B5-48360B813066} = {E98DA495-144B-4E71-A48E-0CFDF8667175}
+		{62A32EB4-8F55-4644-9FC5-0F449D88176B} = {203F4BB3-4B70-4EBB-A77D-339E3300428F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2323340C-4725-4D0D-8A6E-F61F82BC5FC6}
