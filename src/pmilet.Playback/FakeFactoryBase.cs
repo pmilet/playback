@@ -10,16 +10,17 @@ using System.Globalization;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
+using Newtonsoft.Json.Serialization;
 
 namespace pmilet.Playback
 {
     public abstract class FakeFactoryBase : IFakeFactory
     {
-        protected bool GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
+        protected bool GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func, Encoding encoding = null)
         {
             dynamic request = context.Request.Method != "GET" ? Deserialize<TRequest>(context.Request.Body) : GetFromQueryString(context, typeof(TRequest));
             var response = func(request);
-            Stream fakeResponseStream = Serialize<TResponse>(response);
+            Stream fakeResponseStream = Serialize<TResponse>(response, encoding);
             fakeResponseStream.CopyToAsync(context.Response.Body);
             return true;
         }
@@ -33,10 +34,12 @@ namespace pmilet.Playback
             }
         }
 
-        protected Stream Serialize<T>(T body)
+        protected Stream Serialize<T>(T body, Encoding encoding)
         {
-            string serializedBody = JsonConvert.SerializeObject(body);
-            var bytes = Encoding.UTF8.GetBytes(serializedBody);
+            var jsonSerializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            string serializedBody = JsonConvert.SerializeObject(body, jsonSerializerSettings);
+            encoding = encoding ?? Encoding.UTF8;
+            var bytes = encoding.GetBytes(serializedBody);
             MemoryStream m = new MemoryStream(bytes);
             return m;
         }
