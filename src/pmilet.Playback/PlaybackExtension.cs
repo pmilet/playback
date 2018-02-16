@@ -6,21 +6,52 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
+using System.IO;
 
 namespace pmilet.Playback
 {
     public static class PlaybackExtension
     {
-        public enum PlaybackStorageType { Blob, File }        
+        public enum PlaybackStorageType { Blob, File }
 
-        public static void AddPlayback(this IServiceCollection services, IConfiguration configuration, 
+        public static bool IsPlayback(this IPlaybackContext playbackContext)
+        {
+            return IsPlayback(playbackContext.PlaybackMode);
+        }
+
+        public static bool IsPlayback(this PlaybackMode playbackMode)
+        {
+            return (playbackMode == PlaybackMode.Playback || playbackMode == PlaybackMode.PlaybackReal || playbackMode == PlaybackMode.PlaybackChaos);
+        }
+
+        private static string AssemblyLoadDirectory
+        {
+            get
+            {
+                var codeBase = Assembly.GetCallingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                var path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
+        public static void AddPlayback(this IServiceCollection services, IConfiguration configuration,
             IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
         {
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
-            if( playbackStorageService == null )
+            if (playbackStorageService == null)
             {
-                playbackStorageService = new PlaybackBlobStorageService(configuration);
+                if (configuration.GetSection("Switch.Diagnostics")?.GetSection("PlaybackStorage")?.GetValue<string>("ConnectionString")?.ToLower() == "local")
+                {
+                    string name = configuration.GetSection("Switch.Diagnostics")?.GetSection("PlaybackStorage").GetValue<string>("ContainerName");
+                    playbackStorageService = new PlaybackFileStorageService($"{AssemblyLoadDirectory}\\{name}");
+                }
+                else
+                {
+                    playbackStorageService = new PlaybackBlobStorageService(configuration);
+                }
             }
             services.AddScoped<IPlaybackStorageService>(provider => playbackStorageService);
             if (fakeFactory == null)

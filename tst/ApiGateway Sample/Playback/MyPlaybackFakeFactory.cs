@@ -22,9 +22,15 @@ namespace ApiGateway_Sample
             {
                 case "/api/hello":
                     if (context.Request.Method == "POST")
-                        return GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
+                    {
+                        GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
+                        return true;
+                    }
                     else if (context.Request.Method == "GET")
-                        return GenerateFakeResponse<string, string>(context, HelloGet);
+                    {
+                        GenerateFakeResponse<string, string>(context, HelloGet);
+                        return true;
+                    }
                     break;
                 default:
                     return false;
