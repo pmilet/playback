@@ -10,14 +10,14 @@ using System.IO;
 
 namespace pmilet.Playback
 {
-    public class PlaybackMiddleware 
+    public class PlaybackMiddleware
     {
         private readonly IFakeFactory _fakeFactory;
         private readonly IPlaybackStorageService _messageStorageService;
         protected readonly RequestDelegate _next;
         private readonly PlaybackContext _playbackContext;
 
-        public PlaybackMiddleware(RequestDelegate next, IFakeFactory fakeFactory, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)            
+        public PlaybackMiddleware(RequestDelegate next, IFakeFactory fakeFactory, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)
         {
             _fakeFactory = fakeFactory;
             _messageStorageService = messageStorageService;
@@ -30,7 +30,7 @@ namespace pmilet.Playback
             if (httpContext == null)
                 throw new Exception("null Http Context found when invoking Playback Middleware");
 
-            _playbackContext.ReadHttpContext(httpContext );
+            _playbackContext.ReadHttpContext(httpContext);
 
             httpContext.Request.EnableRewind();
 
@@ -94,7 +94,7 @@ namespace pmilet.Playback
             httpContext.Response.OnStarting(state =>
             {
                 var httpContextState = (HttpContext)state;
-                httpContextState.Response.Headers.Add("X-Playback-Id", new[] { _playbackContext.PlaybackId });                
+                httpContextState.Response.Headers.Add("X-Playback-Id", new[] { _playbackContext.PlaybackId });
                 return Task.FromResult(0);
             }, httpContext);
             await _next.Invoke(httpContext);
@@ -104,7 +104,7 @@ namespace pmilet.Playback
         private async Task<string> ReadBody(HttpContext context)
         {
             Stream originalBody = context.Response.Body;
-            string responseBody =null;
+            string responseBody = null;
             try
             {
                 using (var memStream = new MemoryStream())

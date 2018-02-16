@@ -10,7 +10,7 @@ namespace pmilet.Playback
     {
         public static string Context(this string playbackId)
         {
-            return Extract(playbackId,0);
+            return Extract(playbackId, 0);
         }
 
         public static string Name(this string playbackId)

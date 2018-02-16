@@ -24,14 +24,14 @@ namespace pmilet.Playback
 
         public async Task<T> ReplayFromStorageAsync<T>(string playbackId)
         {
-            var message = await DownloadFromStorageAsync( playbackId);
+            var message = await DownloadFromStorageAsync(playbackId);
             return JsonConvert.DeserializeObject<T>(message.BodyString);
         }
 
         public async Task<T> ReplayFromStorageAsync<T>(PlaybackMode playbackMode, string playbackId)
         {
             string value = await ReplayFromStorageAsync(playbackMode, playbackId);
-            return JsonConvert.DeserializeObject<T>( value);
+            return JsonConvert.DeserializeObject<T>(value);
         }
 
         public async Task<string> ReplayFromStorageAsync(PlaybackMode playbackMode, string playbackId)

@@ -36,13 +36,13 @@ namespace pmilet.Playback
             _playbackStorageService = playbackStorageService;
         }
 
-        public static void ChangePlaybackMode( PlaybackMode newPlaybackMode)
+        public static void ChangePlaybackMode(PlaybackMode newPlaybackMode)
         {
             DefaultPlaybackMode = newPlaybackMode;
             PlaybackEventSource.Current.PlaybackModeChanged(newPlaybackMode);
         }
 
-        public static void ChangePlaybackRequestContext( string newRequestPlaybackContext )
+        public static void ChangePlaybackRequestContext(string newRequestPlaybackContext)
         {
             DefaultPlaybackRequestContext = newRequestPlaybackContext;
             PlaybackEventSource.Current.PlaybackRequestContextChanged(newRequestPlaybackContext);
@@ -50,13 +50,13 @@ namespace pmilet.Playback
 
         public static void ChangePlaybackFake(string newPlaybackFake)
         {
-            DefaultPlaybackFake = newPlaybackFake;
+            DefaultPlaybackFake = newPlaybackFake ?? string.Empty; ;
             PlaybackEventSource.Current.PlaybackFakeChanged(newPlaybackFake);
         }
 
         public static string DefaultPlaybackRequestContext { get; set; }
 
-        public static PlaybackMode DefaultPlaybackMode {get;  internal set;}
+        public static PlaybackMode DefaultPlaybackMode { get; internal set; }
 
         public static string DefaultPlaybackFake { get; internal set; }
 
@@ -76,25 +76,31 @@ namespace pmilet.Playback
             get; private set;
         }
 
-        public bool IsPlayback { get{ return PlaybackMode == PlaybackMode.Playback ||
-                 PlaybackMode == PlaybackMode.PlaybackChaos ||
-                 PlaybackMode == PlaybackMode.PlaybackReal; } }
+        public bool IsPlayback
+        {
+            get
+            {
+                return PlaybackMode == PlaybackMode.Playback ||
+PlaybackMode == PlaybackMode.PlaybackChaos ||
+PlaybackMode == PlaybackMode.PlaybackReal;
+            }
+        }
 
-        public bool IsRecord{ get{ return PlaybackMode == PlaybackMode.Record; } }
+        public bool IsRecord { get { return PlaybackMode == PlaybackMode.Record; } }
 
         private string DefaultFileName<T>() { return PlaybackId + "_" + typeof(T).Name; }
 
-        public async Task RecordResult<T>(T result, string fileNameOverride =null )
+        public async Task RecordResult<T>(T result, string fileNameOverride = null)
         {
             string fileName = fileNameOverride == null ? DefaultFileName<T>() : fileNameOverride;
             var body = Newtonsoft.Json.JsonConvert.SerializeObject(result);
-            await _playbackStorageService.UploadToStorageAsync( fileName, body);
+            await _playbackStorageService.UploadToStorageAsync(fileName, body);
         }
 
         public async Task<T> PlaybackResult<T>(string fileNameOverride = null)
         {
             string fileName = fileNameOverride == null ? DefaultFileName<T>() : fileNameOverride;
-            return await _playbackStorageService.ReplayFromStorageAsync<T>(PlaybackMode, fileName );
+            return await _playbackStorageService.ReplayFromStorageAsync<T>(PlaybackMode, fileName);
         }
 
         internal void ReadHttpContext(HttpContext context)
@@ -105,7 +111,7 @@ namespace pmilet.Playback
 
             var keyfound = context.Request.Headers.TryGetValue("X-Playback-RequestContext", out headerValues);
             RequestContextInfo = keyfound ? RequestContextInfo = headerValues.FirstOrDefault() : DefaultPlaybackRequestContext;
-            
+
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Mode", out headerValues);
             PlaybackMode pbm = PlaybackMode.None;
             if (keyfound)
@@ -126,7 +132,7 @@ namespace pmilet.Playback
 
         internal string GenerateNewPlaybackId()
         {
-            if(_context == null )
+            if (_context == null)
                 throw new Exception("null HttpContext when generating new playback Id");
 
             _context.Request.EnableRewind();
@@ -140,7 +146,7 @@ namespace pmilet.Playback
         {
             get
             {
-               
+
                 return _requestBodyString;
             }
         }
@@ -159,7 +165,7 @@ namespace pmilet.Playback
 
         private string Version
         {
-            get;set;
+            get; set;
         }
 
         private string RequestContentHashCode
@@ -172,7 +178,7 @@ namespace pmilet.Playback
 
         private string RequestContextInfo
         {
-            get;set;
+            get; set;
         }
 
         public string Fake

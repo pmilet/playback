@@ -9,7 +9,7 @@ namespace pmilet.Playback.Core
     public interface IPlaybackContext
     {
         string PlaybackId { get; }
-        string Fake{ get; }
+        string Fake { get; }
         PlaybackMode PlaybackMode { get; }
         Task RecordResult<T>(T result, string fileNameOverride = null);
         Task<T> PlaybackResult<T>(string fileNameOverride = null);

@@ -15,13 +15,12 @@ namespace pmilet.Playback
 {
     public abstract class FakeFactoryBase : IFakeFactory
     {
-        protected bool GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
+        protected void GenerateFakeResponse<TRequest, TResponse>(HttpContext context, Func<TRequest, TResponse> func)
         {
             dynamic request = context.Request.Method != "GET" ? Deserialize<TRequest>(context.Request.Body) : GetFromQueryString(context, typeof(TRequest));
             var response = func(request);
             Stream fakeResponseStream = Serialize<TResponse>(response);
             fakeResponseStream.CopyToAsync(context.Response.Body);
-            return true;
         }
 
         protected T Deserialize<T>(Stream body)
@@ -45,7 +44,7 @@ namespace pmilet.Playback
         {
             if (type.Namespace == "System")
             {
-                var key = context.Request.QueryString.HasValue ? context.Request.QueryString.Value.Replace("?","").Split('=')[0]  : "";
+                var key = context.Request.QueryString.HasValue ? context.Request.QueryString.Value.Replace("?", "").Split('=')[0] : "";
                 return string.IsNullOrEmpty(key) ? type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null : context.Request.Query[key].ToString();
             }
 

@@ -8,7 +8,7 @@ using System.IO;
 namespace pmilet.Playback.Core
 {
     public class PlaybackMessage
-    {       
+    {
         public PlaybackMessage(string path, string queryString, string bodyString, string contentType, long elapsedTime)
         {
             Path = path;

@@ -17,21 +17,21 @@ namespace pmilet.Playback
 {
     public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
-        private string _containerName;
-        private readonly string _connectionString;
+        private string _containerName = "playback";
+        private readonly string _connectionString = "DefaultEndpointsProtocol = https; AccountName=cgpswitchstorage;AccountKey=+jzql79CAngGtvtSDLIuZhQCSTcMsyVaTImhEwMfbEDNH0wAWoQmzpmxBFrAkJLBiJ/XpJsEbKEvHOc3JaNS+w==;EndpointSuffix=core.windows.net";
 
         public PlaybackBlobStorageService(string blobStorageConnectionString, string blobStorageContainerName)
         {
             _connectionString = blobStorageConnectionString;
             _containerName = blobStorageContainerName;
         }
-        public PlaybackBlobStorageService(IConfigurationRoot configuration) : this( (IConfiguration)configuration)
+        public PlaybackBlobStorageService(IConfigurationRoot configuration) : this((IConfiguration)configuration)
         {
         }
 
         public PlaybackBlobStorageService(IConfiguration configuration)
         {
-            var section = configuration.GetSection("Switch.Diagnostics").GetSection("PlaybackBlobStorage");
+            var section = configuration.GetSection("Switch.Diagnostics").GetSection("PlaybackStorage");
             _connectionString = section.GetSection("ConnectionString").Value;
             _containerName = section.GetSection("ContainerName").Value;
         }
@@ -65,11 +65,11 @@ namespace pmilet.Playback
             }
             catch (Exception ex)
             {
-                throw new PlaybackStorageException(playbackId,"playback upload error", ex);
+                throw new PlaybackStorageException(playbackId, "playback upload error", ex);
             }
         }
 
-    
+
         public async override Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
         {
             string contentType;
@@ -87,7 +87,7 @@ namespace pmilet.Playback
                 CloudBlobContainer container = blobClient.GetContainerReference(_containerName);
 
                 string text = string.Empty;
-                if (! await container.ExistsAsync()) return null;
+                if (!await container.ExistsAsync()) return null;
 
                 // Retrieve reference to a blob named "photo1.jpg".
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
@@ -106,6 +106,6 @@ namespace pmilet.Playback
             }
         }
 
-        
+
     }
 }
