@@ -5,7 +5,7 @@ An Asp.Net Core middleware library for recording and replaying http requests usi
 Record http requests in your production environment and replay them locally in your localhost by refering to the recorded playback id.
 The playback ids are easy to use as regression or load tests.
 
-###  How to record and playback Api requests?
+###  How to record and playback Api requests (inbound)?
 
 Once your Asp.NetCore Api is configured for playback ( see quick start section below or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
 
@@ -135,29 +135,54 @@ using pmilet.Playback;
   
 ```
 
-### How to record responses received from outgoing requests
+### How to record responses received from outbound requests
 
-For recording responses from outgoing requests you should use the PlaybackContext class that can be injected in your api proxies.
+For replaying responses from outgoing requests you should use the HttpClientFactory.
+this code excerpt show how you:
 
-this code excerpt show how you can save a response received from an outgoing api call
+imagine you have a service proxy to call to an external http service (postman-echo) :
+```cs
+ public class MyServiceProxy : IServiceProxy
+    {
+        public HttpClient HttpClient { get; protected set; }
+
+        public MyServiceProxy(HttpClient httpClient)
+        {
+            HttpClient = httpClient;
+        }
+        public async Task<MyServiceResponse> Execute( MyServiceRequest command)
+        {
+            var requestUri = $"https://postman-echo.com/get?foo1={command.Input}&foo2={command.Input}";
+            var r = await HttpClient.GetAsync(requestUri);
+            var content = await r.Content.ReadAsStringAsync();
+            return new MyServiceResponse() { Output = content };
+        }
+    }
+''
+by overriding this proxy, you can inject a playback specific handler that will be able to record and replay outgoing calls by refering to the playback context and playbackstorage service
 
 ```cs
-       var response = await httpClient.GetAsync(url);
-       var result = await response.Content.ReadAsStringAsync();
-       if (_playbackContext.IsRecord)
-            {
-                await _playbackContext.RecordResult<MyServiceResponse>(result);
-            }
-            else if ( _playbackContext.IsPlayback )
-            {
-                return await _playbackContext.PlaybackResult<MyServiceResponse>();
-            }
-     
-```
+public class MyPlaybackProxy : MyServiceProxy, IServiceProxy
+    {
+        private const string PROXY_NAME = "MyServiceProxy";
+        readonly IPlaybackContext _playbackContext;
+        readonly IPlaybackStorageService _playbackStorageService;
+        private readonly IHttpClientPlaybackErrorSimulationService _configService;
 
-### How to fake api responses
+        public MyPlaybackProxy(IPlaybackContext playbackContext, IPlaybackStorageService playbackStorageService, IHttpClientPlaybackErrorSimulationService configService) :
+            base(new System.Net.Http.HttpClient())
+        {
+            _playbackContext = playbackContext;
+            _playbackStorageService = playbackStorageService;
+            _configService = configService;
+            base.HttpClient = HttpClientFactory.WithPlaybackContext(playbackContext, playbackStorageService, PROXY_NAME, configService);
+        }
+    }
+''
 
-For faking api call responses implement a class that inherits from IFakeFactory like in the following example:
+### How to fake api requests
+
+For faking api call requests you should implement a class that inherits from IFakeFactory:
 ```cs
 public class MyPlaybackFakeFactory : FakeFactoryBase
     {
@@ -186,8 +211,19 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
             
             services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
 ```
+Then set the X-Playback-Fake request header to Inbound to instruct the Playback middleware to use the fakefactory to handle the request 
 
+  ### How to fake api outgoing responses
   
+  Override the outbound proxy as explained in the  "How to record responses received from outbound requests" section
+  
+  When setting the X-Playback-Fake to outbound all the outgoing responses files will be searched in the playbackstorage and if found returned. The file format should follow the following format convention : {PROXY_NAME}_Fake{requestNumber}_{contextValue}.
+So for example if we want to create a fake response for the 1st call to MyServiceProxy we should upload to the playbackstorage a file with the name MyServiceProxy_Fake1_ which content is the fake response. 
+A way to discriminate the fake response by scenario is setting the X-Playback-RequestContext header to some value, for example Test1, in this case the file should be named as MyServiceProxy_Fake1_Test1.
+See the TestWebApi sample for a running example...
+
+
+ 
 
 
 
