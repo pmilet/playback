@@ -9,8 +9,6 @@ The playback ids are easy to use as regression tests or even load tests for test
 
 In your Startup class:
 
-Configure Playback middleware.
-
 ```cs
 using pmilet.Playback;
 
