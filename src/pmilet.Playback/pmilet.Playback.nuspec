@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>pmilet.Playback</id>
-    <version>1.1.2</version>
+    <version>1.1.0</version>
     <title>pmilet http Playback</title>
     <authors>Pierre Milet</authors>
     <owners>Pierre Milet</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://avatars2.githubusercontent.com/u/18263595</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An Asp.Net Core middleware library for recording and replaying http requests.</description>
-    <releaseNotes>new file storage service</releaseNotes>
+    <releaseNotes>new way to fake outbound responses by using a playback HttpClient</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Asp.NetCore Http Playback Replay</tags>
     <dependencies>
