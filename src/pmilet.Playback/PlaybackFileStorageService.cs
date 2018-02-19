@@ -35,8 +35,14 @@ namespace pmilet.Playback
         {
             try
             {
-                string bodyString = File.ReadAllText($"{_storagePath}\\{playbackId}");
-                return Task.FromResult(JsonConvert.DeserializeObject<PlaybackMessage>(bodyString));
+                string path = $"{_storagePath}\\{playbackId}";
+                string bodyString = File.ReadAllText(path);
+                var playbackMessage = Task.FromResult(JsonConvert.DeserializeObject<PlaybackMessage>(bodyString));
+
+                if (playbackMessage.Result.BodyString != null)
+                    return playbackMessage;
+
+                return Task.FromResult(new PlaybackMessage(path, string.Empty, bodyString, "text", 0));                
             }
             catch (Exception ex)
             {
@@ -53,7 +59,7 @@ namespace pmilet.Playback
             try
             {
                 var content = JsonConvert.SerializeObject(playbackMessage);
-                File.WriteAllText(_storagePath, content);
+                File.WriteAllText($"{_storagePath}\\{playbackId}", content);
                 return Task.CompletedTask;
             }
             catch (Exception ex)

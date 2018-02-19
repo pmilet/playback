@@ -43,10 +43,10 @@ namespace pmilet.Playback
             services.AddScoped<IPlaybackContext, PlaybackContext>();
             if (playbackStorageService == null)
             {
-                if (configuration.GetSection("Switch.Diagnostics")?.GetSection("PlaybackStorage")?.GetValue<string>("ConnectionString")?.ToLower() == "local")
+                if (configuration.GetSection("PlaybackStorage")?.GetValue<string>("ConnectionString")?.ToLower() == "local")
                 {
-                    string name = configuration.GetSection("Switch.Diagnostics")?.GetSection("PlaybackStorage").GetValue<string>("ContainerName");
-                    playbackStorageService = new PlaybackFileStorageService($"{AssemblyLoadDirectory}\\{name}");
+                    string name = configuration.GetSection("PlaybackStorage").GetValue<string>("ContainerName");
+                    playbackStorageService = new PlaybackFileStorageService($"{AssemblyLoadDirectory}\\{name}\\");
                 }
                 else
                 {

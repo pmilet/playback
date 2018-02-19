@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace ApiGateway_Sample
+namespace TestWebApi.Controllers
 {
     public class HelloRequest
     {

@@ -51,7 +51,7 @@ namespace pmilet.Playback
 
             if (_playbackContext.PlaybackMode == PlaybackMode.Record)
             {
-                string content = await request.Content.ReadAsStringAsync();
+                string content = request.Content !=null? await request.Content.ReadAsStringAsync() : string.Empty;
                 string playbackId = $"{_handlerName}Req{_requestNumber}{_playbackContext.PlaybackId}";
                 await _playbackStorageService.UploadToStorageAsync(playbackId, content);
             }
