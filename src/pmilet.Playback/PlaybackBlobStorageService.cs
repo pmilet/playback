@@ -100,8 +100,7 @@ namespace pmilet.Playback
             }
             catch (Exception ex)
             {
-                string errorMessage = string.Format("Error downloading file {0} from blob storage ", playbackId);
-                throw new StorageException(errorMessage, ex);
+                return await Task.FromResult(new PlaybackMessage(_containerName, string.Empty, null, "text", 0));
             }
         }
 

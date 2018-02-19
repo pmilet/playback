@@ -56,16 +56,24 @@ namespace pmilet.Playback
                 await _playbackStorageService.UploadToStorageAsync(playbackId, content);
             }
 
-            if (fake == "outbound" || fake.Contains(_handlerName.ToLower()))
+            HttpResponseMessage replayedResponse = null;
+
+            bool required = fake == "outrequired";
+            if (fake == "outrequired" || fake == "outoptional" || fake.Contains(_handlerName.ToLower()))
             {
                 string playbackId = $"{_handlerName}_Fake{_requestNumber}_{_playbackContext.PlaybackId.Context()}";
-                return await Replay(playbackId);
+                replayedResponse = await Replay(playbackId);
             }
             else if (_playbackContext.IsPlayback())
             {
                 string playbackId = $"{_handlerName}Resp{_requestNumber}{_playbackContext.PlaybackId}";
-                return await Replay(playbackId);
+                replayedResponse = await Replay(playbackId);
             }
+
+            if (replayedResponse != null)
+                return replayedResponse;
+            else if (replayedResponse == null && required)
+                throw new PlaybackFakeException("Outbound fake response not found");
 
             var freshResponse = await base.SendAsync(request, cancellationToken);
 
@@ -88,6 +96,10 @@ namespace pmilet.Playback
             var m = await _playbackStorageService.DownloadFromStorageAsync(playbackId);
             string content = m.BodyString;
             var savedResponse = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            if (content == null)
+            {
+                return null;
+            }
             savedResponse.Content = new StringContent(content);
             return savedResponse;
         }

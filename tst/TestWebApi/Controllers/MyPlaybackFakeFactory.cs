@@ -20,7 +20,7 @@ namespace TestWebApi.Controllers
         {
             switch (context.Request.Path.Value.ToLower())
             {
-                case "/api/hello":
+                case "/api/values":
                     if (context.Request.Method == "POST")
                     {
                         GenerateFakeResponse<HelloRequest, string>(context, HelloPost);

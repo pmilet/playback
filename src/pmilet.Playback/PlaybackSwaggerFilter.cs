@@ -50,7 +50,7 @@ namespace pmilet.Playback
                 In = "header",
                 Required = false,
                 Type = "string",
-                Enum = new List<object>() { "None", "Inbound", "Outbound" },
+                Enum = new List<object>() { "None", "InRequired", "InOptional", "OutRequired", "OutOptional" },
                 Description = "Request to fake incoming requests and Proxy to fake outgoing requests"
             });
             operation.Parameters.Add(new NonBodyParameter

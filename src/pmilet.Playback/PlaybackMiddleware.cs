@@ -36,8 +36,11 @@ namespace pmilet.Playback
 
             switch (_playbackContext.Fake)
             {
-                case "Inbound":
-                    await FakeHandler(httpContext);
+                case "InRequired":
+                    await FakeHandler(httpContext,true);
+                    return;
+                case "InOptional":
+                    await FakeHandler(httpContext, false);
                     return;
                 default:
                     break;
@@ -59,7 +62,7 @@ namespace pmilet.Playback
             }
         }
 
-        private async Task FakeHandler(HttpContext httpContext)
+        private async Task FakeHandler(HttpContext httpContext, bool required)
         {
             bool handled = false;
             try
@@ -70,17 +73,19 @@ namespace pmilet.Playback
             {
                 httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
                 await httpContext.Response.WriteAsync(ex.Message);
-                handled = true;
+                throw new PlaybackFakeException( "Exception caught", ex);
             }
             catch (Exception ex)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await httpContext.Response.WriteAsync(ex.Message);
-                handled = true;
+                throw new PlaybackFakeException("Exception caught", ex);
             }
 
-            if (!handled)
+            if (!handled && !required)
                 await _next.Invoke(httpContext);
+            else if( !handled && required)
+                throw new PlaybackFakeException("Required fake request handler not found");
         }
 
         private async Task RecordHandler(HttpContext httpContext)

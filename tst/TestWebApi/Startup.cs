@@ -56,7 +56,7 @@ namespace TestWebApi
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage( );
             }
 
             app.UseSwagger();

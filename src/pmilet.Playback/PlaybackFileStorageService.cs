@@ -33,9 +33,9 @@ namespace pmilet.Playback
 
         public override Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
         {
+            string path = $"{_storagePath}\\{playbackId}";
             try
             {
-                string path = $"{_storagePath}\\{playbackId}";
                 string bodyString = File.ReadAllText(path);
                 var playbackMessage = Task.FromResult(JsonConvert.DeserializeObject<PlaybackMessage>(bodyString));
 
@@ -46,8 +46,7 @@ namespace pmilet.Playback
             }
             catch (Exception ex)
             {
-                string errorMessage = string.Format("Error retrieving file {0} from folder {1}", playbackId, _storagePath);
-                throw new StorageException(errorMessage, ex);
+                return Task.FromResult(new PlaybackMessage(path, string.Empty, null, "text", 0));
             }
         }
 
