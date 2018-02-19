@@ -1,64 +1,11 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library for recording and replaying http requests and responses using a playback identifier.
+An Asp.Net Core middleware library for recording and replaying api http requests and responses using a playback identifier.
 
 ### Purpose
 Record http requests in your production environment and replay them locally in your localhost by refering to the recorded playback id.
-The playback ids are easy to use as regression or load tests.
+The playback ids are easy to use as regression tests or even load tests for testing the api under development.
 
-###  How to record and playback Api requests (inbound)?
-
-Once your Asp.NetCore Api is configured for playback ( see quick start section below or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
-
-```javascript
-curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
-```
-
-then a  x-playback-id response header will be returned. 
-
-```javascript
-Response Headers
-{
-  "date": "Wed, 25 Oct 2017 21:05:46 GMT",
-  "content-encoding": "gzip",
-  "server": "Kestrel",
-  "x-powered-by": "ASP.NET",
-  "vary": "Accept-Encoding",
-  "content-type": "text/plain; charset=utf-8",
-  "transfer-encoding": "chunked",
-  "x-playback-id": "_ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046"
-}
-```
-
-To replay set the X-Playback-Mode header to Playback and the X-Playback-Id header with the value received from the recording response.
-
-```javascript
-curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
-```
-
-When setting the x-playback-mode to None the playback functionality is bypassed. 
-
-### PlaybackId format
-The playback id is composed of differents parts each one carrying important context information. 
-The playback id parts are separated by an underscore : 
-
-PlaybackContextInfo_ApiName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
-  
-  - The PlayContextInfo comes from the X-Playback-RequestContext header.
-  - The ApiName is the web api Name. 
-  - The PlaybackVersion comes from the X-Playback-Version header.
-  - The RequestPath is the request path url encoded
-  - The RequestMethod is the request http verb
-  - The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
-  
-For example this playbackid  DemoUser_ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046 can be descompsed as:
-  - PlayContextInfo = DemoUser
-  - AssemblyName = ApiGateway+Sample
-  - PlaybackVersion = v1.0
-  - RequestPath = Hello%252Fhello
-  - RequestMethod = GET
-  - RequestContextHash = 757602046
-
-### How to Quick Start
+### How to Setup
 
 In your Startup class:
 
@@ -109,15 +56,26 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 
 In your appsetings.json file:
 
-Add playback storage section
+Add playback storage section as in the examples below:
 
+Sample configuration for using blob storage:
 ```json
 {
-  "PlaybackBlobStorage": {
+  "PlaybackStorage": {
     "ConnectionString": "UseDevelopmentStorage=true",
     "ContainerName": "playback"
   },
 ```
+
+Sample configuration for using local file system:
+```json
+  
+   "PlaybackStorage": {
+    "ConnectionString": "Local",
+    "ContainerName": "PlaybackFiles" 
+  },
+```
+
 In your controllers:
 
 if using swagger, decorate your controller for swagger to generate playback headers in swagger UI  
@@ -134,6 +92,59 @@ using pmilet.Playback;
   ...
   
 ```
+
+###  How to record and playback incoming Api requests?
+
+Once your Asp.NetCore Api is configured for playback ( see above section or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
+
+```javascript
+curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
+```
+
+then a  x-playback-id response header will be returned. 
+
+```javascript
+Response Headers
+{
+  "date": "Wed, 25 Oct 2017 21:05:46 GMT",
+  "content-encoding": "gzip",
+  "server": "Kestrel",
+  "x-powered-by": "ASP.NET",
+  "vary": "Accept-Encoding",
+  "content-type": "text/plain; charset=utf-8",
+  "transfer-encoding": "chunked",
+  "x-playback-id": "_ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046"
+}
+```
+
+To replay set the X-Playback-Mode header to Playback and the X-Playback-Id header with the value received from the recording response.
+
+```javascript
+curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
+```
+
+When setting the x-playback-mode to None the playback functionality is bypassed. 
+
+### PlaybackId format
+The playback id is composed of differents parts each one carrying important context information. 
+The playback id parts are separated by an underscore : 
+
+PlaybackContextInfo_ApiName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
+  
+  - The PlayContextInfo comes from the X-Playback-RequestContext header.
+  - The ApiName is the web api Name. 
+  - The PlaybackVersion comes from the X-Playback-Version header.
+  - The RequestPath is the request path url encoded
+  - The RequestMethod is the request http verb
+  - The RequestContextHash is a hash of the request payload in order to univoquely indentify each different request.
+  
+For example this playbackid  DemoUser_ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046 can be descompsed as:
+  - PlayContextInfo = DemoUser
+  - AssemblyName = ApiGateway+Sample
+  - PlaybackVersion = v1.0
+  - RequestPath = Hello%252Fhello
+  - RequestMethod = GET
+  - RequestContextHash = 757602046
 
 ### How to record responses received from outbound requests
 
