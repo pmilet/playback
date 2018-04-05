@@ -2,8 +2,8 @@
 An Asp.Net Core middleware library for recording http requests and replaying them by means of the recorded playback identifier
 
 ### Purpose
-Record http requests in your production environment and replay them locally in your localhost by refering to the recorded playback id.
-The playback ids are easy to use as regression tests or even load tests for testing the api under development.
+Record http requests in any environment to replay them from anywhere and anytime.
+Normally used for unit, integration, regresion or load tests.
 
 ### How to Setup
 
@@ -54,9 +54,9 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 
 In your appsetings.json file:
 
-Add playback storage section as in the examples below:
+Add playback storage section that points to the storage (blob, or file) where the requests and responses will be saved:
 
-Sample configuration for using blob storage:
+Sample configuration for using a blob storage:
 ```json
 {
   "PlaybackStorage": {
@@ -91,9 +91,9 @@ using pmilet.Playback;
   
 ```
 
-###  How to record and playback incoming Api requests?
+###  How to record and replay incoming Api requests?
 
-Once your Asp.NetCore Api is configured for playback ( see above section or refer to sample in github repo ) you can start recording your api requests by setting the X-Playback-Mode request header value to Record. 
+Once your Asp.NetCore Api is configured for playback ( see above section or refer to sample in github repo ) you can start recording your api requests by setting the client request X-Playback-Mode header value to Record. 
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Mode: Record' 'http://apigatewaysample.azurewebsites.net/api/Hello/hello'
@@ -115,7 +115,7 @@ Response Headers
 }
 ```
 
-To replay set the X-Playback-Mode header to Playback and the X-Playback-Id header with the value received from the recording response.
+To replay a previously recorded request, set the client request X-Playback-Mode header to Playback and the X-Playback-Id header with the playbackid value received from the recording response.
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
@@ -124,8 +124,8 @@ curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+S
 When setting the x-playback-mode to None the playback functionality is bypassed. 
 
 ### PlaybackId format
-The playback id is composed of differents parts each one carrying important context information. 
-The playback id parts are separated by an underscore : 
+The returned playbackid header is composed of differents parts each one carrying important context information. 
+Each playbackid part is separated by an underscore : 
 
 PlaybackContextInfo_ApiName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
   
