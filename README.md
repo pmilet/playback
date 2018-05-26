@@ -1,8 +1,8 @@
 # Asp.Net Core Playback
-An Asp.Net Core middleware library for recording http requests that can later be replayed.
+An Asp.Net Core middleware library for recording and replay http requests (inbound and outbound).
 
 ### Purpose
-Record http requests in any environment to replay them from anywhere and anytime.
+Record your Web api incoming and outgoing http requests in any environment to replay them later from anywhere and anytime.
 Useful for unit testing, and also regresion and load tests.
 
 ### How to Setup
