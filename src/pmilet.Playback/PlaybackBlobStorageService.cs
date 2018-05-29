@@ -18,7 +18,7 @@ namespace pmilet.Playback
     public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private string _containerName = "playback";
-        private readonly string _connectionString = "DefaultEndpointsProtocol = https; AccountName=cgpswitchstorage;AccountKey=+jzql79CAngGtvtSDLIuZhQCSTcMsyVaTImhEwMfbEDNH0wAWoQmzpmxBFrAkJLBiJ/XpJsEbKEvHOc3JaNS+w==;EndpointSuffix=core.windows.net";
+        private readonly string _connectionString = "DefaultEndpointsProtocol = https; AccountName=XXXXXXXXX;AccountKey=XXXXXXXXX;EndpointSuffix=core.windows.net";
 
         public PlaybackBlobStorageService(string blobStorageConnectionString, string blobStorageContainerName)
         {
