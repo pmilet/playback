@@ -2,7 +2,7 @@
 An Asp.Net Core middleware library for recording and replay http requests (inbound and outbound).
 
 ### Purpose
-Record your Web api incoming and outgoing http requests for later replay in a dev / testing environment.
+Record your Web api incoming (your API received calls) and outgoing (calls from your API to external dependencies) http requests for later replay in a dev / testing environment.
 Useful for unit testing, and or regresion testing your API.
 
 ### How to Setup
