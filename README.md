@@ -188,54 +188,6 @@ public class MyPlaybackProxy : MyServiceProxy, IServiceProxy
         }
     }
 ''
-```
-
-### How to fake api requests
-
-For faking api call requests you should implement a class that inherits from IFakeFactory:
-```cs
-public class MyPlaybackFakeFactory : FakeFactoryBase
-    {
-        public override void GenerateFakeResponse(HttpContext context)
-        {
-            switch (context.Request.Path.Value.ToLower())
-            {
-                case "/api/values":
-                    if (context.Request.Method == "POST")
-                        GenerateFakeResponse<HelloRequest, string>(context, HelloPost);
-                    else if (context.Request.Method == "GET")
-                        GenerateFakeResponse<string, string>(context, HelloGet);
-                    break;
-                default:
-                    throw new NotImplementedException("fake method not found");
-            }
-        }
-```
-
-Then don't forget to register your fake factory duting initialization:
-
-```cs
-public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().AddControllersAsServices();
-            
-            services.AddPlayback(Configuration, fakeFactory: new MyPlaybackFakeFactory());
-```
-Then set the X-Playback-Fake request header to InRequired or InOptional to instruct the Playback middleware to use the fakefactory to handle the request. If the request fake handler is not found and InRequired is set an exception is thrown otherwise the call continues through the execution pipeline.
-
-  ### How to fake api outgoing responses
-  
-  Override the outbound proxy as explained in the  "How to record responses received from outbound requests" section
-  
-  When setting the X-Playback-Fake to OutRequired or OutOptional all the outgoing responses files will be fetched from the playbackstorage. If the file is not found and OutRequired is set an exception is thrown otherwise the external call is made. 
-  
-The file format should follow the following format convention : {PROXY_NAME}_Fake{requestNumber}_{contextValue}.
-So for example if we want to create a fake response for the 1st call to MyServiceProxy we should upload to the playbackstorage a file with the name MyServiceProxy_Fake1_ which content is the fake response. 
-
-A way to discriminate the fake response by scenario is setting the X-Playback-RequestContext header to some value, for example Test1, in this case the file should be named as MyServiceProxy_Fake1_Test1.
-See the TestWebApi sample for a running example...
-
-
  
 
 
