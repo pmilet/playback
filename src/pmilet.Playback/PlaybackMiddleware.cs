@@ -12,14 +12,12 @@ namespace pmilet.Playback
 {
     public class PlaybackMiddleware
     {
-        private readonly IFakeFactory _fakeFactory;
         private readonly IPlaybackStorageService _messageStorageService;
         protected readonly RequestDelegate _next;
         private readonly PlaybackContext _playbackContext;
 
-        public PlaybackMiddleware(RequestDelegate next, IFakeFactory fakeFactory, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)
+        public PlaybackMiddleware(RequestDelegate next, IPlaybackStorageService messageStorageService, IPlaybackContext playbackContext)
         {
-            _fakeFactory = fakeFactory;
             _messageStorageService = messageStorageService;
             _next = next;
             _playbackContext = playbackContext as PlaybackContext;
@@ -32,19 +30,7 @@ namespace pmilet.Playback
 
             _playbackContext.ReadHttpContext(httpContext);
 
-            httpContext.Request.EnableRewind();
-
-            switch (_playbackContext.Fake)
-            {
-                case "InRequired":
-                    await FakeHandler(httpContext,true);
-                    return;
-                case "InOptional":
-                    await FakeHandler(httpContext, false);
-                    return;
-                default:
-                    break;
-            }
+            httpContext.Request.EnableRewind();     
 
             switch (_playbackContext.PlaybackMode)
             {
@@ -60,32 +46,6 @@ namespace pmilet.Playback
                     await _next.Invoke(httpContext);
                     break;
             }
-        }
-
-        private async Task FakeHandler(HttpContext httpContext, bool required)
-        {
-            bool handled = false;
-            try
-            {
-                handled = _fakeFactory.GenerateFakeResponse(httpContext);
-            }
-            catch (NotImplementedException ex)
-            {
-                httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
-                await httpContext.Response.WriteAsync(ex.Message);
-                throw new PlaybackFakeException( "Exception caught", ex);
-            }
-            catch (Exception ex)
-            {
-                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await httpContext.Response.WriteAsync(ex.Message);
-                throw new PlaybackFakeException("Exception caught", ex);
-            }
-
-            if (!handled && !required)
-                await _next.Invoke(httpContext);
-            else if( !handled && required)
-                throw new PlaybackFakeException("Required fake request handler not found");
         }
 
         private async Task RecordHandler(HttpContext httpContext)

@@ -37,7 +37,7 @@ namespace pmilet.Playback
         }
 
         public static void AddPlayback(this IServiceCollection services, IConfiguration configuration,
-            IPlaybackStorageService playbackStorageService = null, IFakeFactory fakeFactory = null)
+            IPlaybackStorageService playbackStorageService = null)
         {
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
@@ -54,11 +54,6 @@ namespace pmilet.Playback
                 }
             }
             services.AddScoped<IPlaybackStorageService>(provider => playbackStorageService);
-            if (fakeFactory == null)
-            {
-                fakeFactory = new DefaultFakeFactory();
-            }
-            services.AddScoped(typeof(IFakeFactory), fakeFactory.GetType());
         }
 
         public static IApplicationBuilder UsePlayback(this IApplicationBuilder builder)

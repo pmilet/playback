@@ -42,10 +42,7 @@ namespace pmilet.Playback
         
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var fake = string.IsNullOrWhiteSpace(_playbackContext.Fake)
-                ? string.Empty
-                : _playbackContext.Fake?.ToLower();
-
+          
             PerformPlaybackSimulationStrategy();
             _requestNumber++;
 
@@ -58,22 +55,11 @@ namespace pmilet.Playback
 
             HttpResponseMessage replayedResponse = null;
 
-            bool required = fake == "outrequired";
-            if (fake == "outrequired" || fake == "outoptional" || fake.Contains(_handlerName.ToLower()))
-            {
-                string playbackId = $"{_handlerName}_Fake{_requestNumber}_{_playbackContext.PlaybackId.Context()}";
-                replayedResponse = await Replay(playbackId);
-            }
-            else if (_playbackContext.IsPlayback())
+            if (_playbackContext.IsPlayback())
             {
                 string playbackId = $"{_handlerName}Resp{_requestNumber}{_playbackContext.PlaybackId}";
-                replayedResponse = await Replay(playbackId);
+                return replayedResponse = await Replay(playbackId);
             }
-
-            if (replayedResponse != null)
-                return replayedResponse;
-            else if (replayedResponse == null && required)
-                throw new PlaybackFakeException("Outbound fake response not found");
 
             var freshResponse = await base.SendAsync(request, cancellationToken);
 

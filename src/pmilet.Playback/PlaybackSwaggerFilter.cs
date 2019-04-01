@@ -46,15 +46,6 @@ namespace pmilet.Playback
             });
             operation.Parameters.Add(new NonBodyParameter
             {
-                Name = "X-Playback-Fake",
-                In = "header",
-                Required = false,
-                Type = "string",
-                Enum = new List<object>() { "None", "InRequired", "InOptional", "OutRequired", "OutOptional" },
-                Description = "Request to fake incoming requests and Proxy to fake outgoing requests"
-            });
-            operation.Parameters.Add(new NonBodyParameter
-            {
                 Name = "X-Playback-Id",
                 In = "header",
                 Required = false,

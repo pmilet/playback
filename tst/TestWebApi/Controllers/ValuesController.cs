@@ -25,6 +25,15 @@ namespace TestWebApi.Controllers
             var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = "Get" });
             return v.Output;
         }
-       
+
+        [HttpGet("{input}")]
+        [SwaggerOperation("Get")]
+        [SwaggerOperationFilter(typeof(PlaybackSwaggerFilter))]
+        public async Task<string> Get(string input)
+        {
+            var v = await _serviceProxy.Execute(new MyServiceRequest() { Input = $"GET { input }" });
+            return v.Output;
+        }
+
     }
 }

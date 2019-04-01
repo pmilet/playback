@@ -120,9 +120,6 @@ PlaybackMode == PlaybackMode.PlaybackReal;
                 PlaybackMode = pbm;
             }
 
-            keyfound = context.Request.Headers.TryGetValue("X-Playback-Fake", out headerValues);
-            Fake = keyfound ? Fake = headerValues.FirstOrDefault() : DefaultPlaybackFake;
-
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Version", out headerValues);
             Version = keyfound ? headerValues.FirstOrDefault() : string.Empty;
 
@@ -177,11 +174,6 @@ PlaybackMode == PlaybackMode.PlaybackReal;
         }
 
         private string RequestContextInfo
-        {
-            get; set;
-        }
-
-        public string Fake
         {
             get; set;
         }
