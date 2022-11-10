@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using pmilet.Playback;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace TestWebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ValuesController : ControllerBase
     {
         readonly IServiceProxy  _serviceProxy;
         public ValuesController( IServiceProxy remoteServiceProxy )

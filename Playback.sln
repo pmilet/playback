@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{460ECF6F-4F74-4AF6-906D-A6B9EE5E5120}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{E98DA495-144
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pmilet.Playback", "src\pmilet.Playback\pmilet.Playback.csproj", "{62A32EB4-8F55-4644-9FC5-0F449D88176B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApi", "tst\TestWebApi\TestWebApi.csproj", "{49E8ED2C-FB55-445B-8116-20859C9B74FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApi", "tst\TestWebApi\TestWebApi.csproj", "{49E8ED2C-FB55-445B-8116-20859C9B74FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

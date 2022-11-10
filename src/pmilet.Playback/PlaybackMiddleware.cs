@@ -2,11 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 using pmilet.Playback.Core;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System.Net;
-using System.Threading.Tasks;
-using System;
-using System.IO;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace pmilet.Playback
 {
@@ -30,7 +27,13 @@ namespace pmilet.Playback
 
             _playbackContext.ReadHttpContext(httpContext);
 
-            httpContext.Request.EnableRewind();     
+            var syncIOFeature = httpContext.Features.Get<IHttpBodyControlFeature>();
+            if (syncIOFeature != null)
+            {
+                syncIOFeature.AllowSynchronousIO = true;
+            }
+
+            httpContext.Request.EnableBuffering();     
 
             switch (_playbackContext.PlaybackMode)
             {

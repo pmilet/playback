@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
 using pmilet.Playback.Core;
 using System.Threading.Tasks;
@@ -132,7 +131,7 @@ PlaybackMode == PlaybackMode.PlaybackReal;
             if (_context == null)
                 throw new Exception("null HttpContext when generating new playback Id");
 
-            _context.Request.EnableRewind();
+            _context.Request.EnableBuffering();
             _requestBodyString = ReadToEnd(_context.Request.Body);
             PlaybackId = WebUtility.UrlEncode(RequestContextInfo + "_" + _assemblyName + "_" + "v" + Version + "_" + RequestPath + "_" + RequestMethod + "_" + RequestContentHashCode);
 

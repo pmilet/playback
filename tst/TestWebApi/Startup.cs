@@ -16,7 +16,7 @@ namespace TestWebApi
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -39,32 +39,35 @@ namespace TestWebApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
+                c.OperationFilter<PlaybackSwaggerFilter>();
             });
 
-            services.AddMvc();
+            services.AddControllers();
 
             //don't forget to return the service provider
             return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
+          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage( );
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
+            app.UseSwaggerUI(c=> { c.SwaggerEndpoint("v1/swagger.json", "API"); });
 
             app.UsePlayback();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
         }
     }
 }
