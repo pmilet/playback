@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace TestWebApi.Controllers
 {
-    public class MyPlaybackProxy : MyServiceProxy, IServiceProxy
+    public class PlaybackService : Service, IService
     {
         private const string PROXY_NAME = "MyServiceProxy";
         readonly IPlaybackContext _playbackContext;
         readonly IPlaybackStorageService _playbackStorageService;
         private readonly IHttpClientPlaybackErrorSimulationService _configService;
 
-        public MyPlaybackProxy(IPlaybackContext playbackContext, IPlaybackStorageService playbackStorageService, IHttpClientPlaybackErrorSimulationService configService) :
+        public PlaybackService(IPlaybackContext playbackContext, IPlaybackStorageService playbackStorageService, IHttpClientPlaybackErrorSimulationService configService) :
             base(new System.Net.Http.HttpClient())
         {
             _playbackContext = playbackContext;

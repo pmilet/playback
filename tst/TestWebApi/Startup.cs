@@ -33,8 +33,8 @@ namespace TestWebApi
         {
             services.AddPlayback(Configuration);
 
-            services.AddScoped<MyServiceProxy, MyPlaybackProxy>();
-            services.AddScoped<IServiceProxy, MyPlaybackProxy>();
+            services.AddScoped<Service, PlaybackService>();
+            services.AddScoped<IService, PlaybackService>();
             services.AddScoped<IHttpClientPlaybackErrorSimulationService, HttpClientPlaybackErrorSimulationService>();
 
             services.AddSwaggerGen(c =>

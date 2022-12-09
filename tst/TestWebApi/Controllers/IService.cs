@@ -2,7 +2,7 @@
 
 namespace TestWebApi.Controllers
 {
-    public interface IServiceProxy
+    public interface IService
     {
         Task<MyServiceResponse> Execute(MyServiceRequest command);
     }

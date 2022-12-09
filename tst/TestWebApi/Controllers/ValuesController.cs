@@ -8,8 +8,8 @@ namespace TestWebApi.Controllers
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
     {
-        readonly IServiceProxy  _serviceProxy;
-        public ValuesController( IServiceProxy remoteServiceProxy )
+        readonly IService  _serviceProxy;
+        public ValuesController( IService remoteServiceProxy )
         {
             _serviceProxy = remoteServiceProxy;
         }

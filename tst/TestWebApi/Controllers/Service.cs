@@ -14,11 +14,11 @@ namespace TestWebApi.Controllers
         public string Output { get; set; }
     }
 
-    public class MyServiceProxy : IServiceProxy
+    public class Service : IService
     {
         public HttpClient HttpClient { get; protected set; }
 
-        public MyServiceProxy(HttpClient httpClient)
+        public Service(HttpClient httpClient)
         {
             HttpClient = httpClient;
         }
