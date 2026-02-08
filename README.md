@@ -1,50 +1,64 @@
-# Asp.Net Core Playback
-An Asp.Net Core middleware library for recording and replay http requests (inbound and outbound).
+# ASP.NET Core Playback
 
-### Purpose
-Record your Web api incoming (your API received calls) and outgoing (calls from your API to external dependencies) http requests for later replay in a dev / testing environment.
-Useful for unit testing, and or regresion testing your API.
+An ASP.NET Core middleware library for recording and replaying HTTP requests (inbound and outbound).
 
-### How to Setup
+## Requirements
+- .NET 9.0 or later
+
+## Purpose
+Record your Web API incoming (your API receives calls) and outgoing (calls from your API to external dependencies) HTTP requests for later replay in a dev/testing environment.
+Useful for unit testing, integration testing, and regression testing your API.
+
+## How to Setup
+
+### For .NET 9+ (Minimal Hosting Model)
+
+In your `Program.cs`:
+
+```csharp
+using pmilet.Playback;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddPlayback(builder.Configuration);
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+app.UsePlayback();
+app.MapControllers();
+
+app.Run();
+```
+
+### For Legacy Startup Class (compatibility)
 
 In your Startup class:
 
-```cs
+```csharp
 using pmilet.Playback;
 
-...
-
-public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            ...
-            
-            services.AddPlayback(Configuration);
-            
-            ...
-            
-            //don't forget to return the service provider
-            return services.BuildServiceProvider();
-
-         }
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddPlayback(Configuration);
+}
  
- public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            ...
-            
-            app.UsePlayback();
-          
-            ...
-        }
-      
- ...
-            
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+    app.UsePlayback();
+    // ... other middleware
+}
 ```
 
-In your appsetings.json file:
+## Configuration
 
-Add playback storage section that points to the storage (blob, or file) where the requests and responses will be saved:
+In your `appsettings.json` file:
 
-Sample configuration for using a blob storage:
+Add a playback storage section that points to the storage (blob or file) where the requests and responses will be saved:
+
+### Sample configuration for using Azure Blob Storage:
 ```json
 {
   "PlaybackStorage": {
@@ -103,17 +117,18 @@ Response Headers
 }
 ```
 
-To replay a previously recorded request, set the client request X-Playback-Mode header to Playback and the X-Playback-Id header with the playbackid value received from the recording response.
+To replay a previously recorded request, set the client request `X-Playback-Mode` header to `Playback` and the `X-Playback-Id` header with the playback ID value received from the recording response.
 
 ```javascript
 curl -X GET --header 'Accept: text/plain' --header 'X-Playback-Id: _ApiGateway+Sample_v1.0_Hello%252Fhello_GET_757602046' --header 'X-Playback-Mode: Playback' 'http://apigatewaysample.azurewebsites.net/api/Hello/bye'
 ```
 
-When setting the x-playback-mode to None the playback functionality is bypassed. 
+When setting the `X-Playback-Mode` to `None`, the playback functionality is bypassed.
 
-### PlaybackId format
-The returned playbackid header is composed of differents parts each one carrying important context information. 
-Each playbackid part is separated by an underscore : 
+## PlaybackId Format
+
+The returned playback ID header is composed of different parts, each carrying important context information. 
+Each playback ID part is separated by an underscore: 
 
 PlaybackContextInfo_ApiName_PlaybackVersion_RequestPath_RequestMethod_RequestContextHash
   
@@ -132,50 +147,71 @@ For example this playbackid  DemoUser_ApiGateway+Sample_v1.0_Hello%252Fhello_GET
   - RequestMethod = GET
   - RequestContextHash = 757602046
 
-### How to record responses received from outbound requests
+## How to Record Responses from Outbound Requests
 
-For replaying responses from outgoing requests you should use the HttpClientFactory.
-this code excerpt show how you:
+For replaying responses from outgoing requests, you should use the `HttpClientFactory`.
 
-imagine you have a service proxy to call to an external http service (postman-echo) :
-```cs
- public class MyServiceProxy : IServiceProxy
+### Example Service Proxy
+
+Imagine you have a service proxy to call an external HTTP service (postman-echo):
+
+```csharp
+public class MyServiceProxy : IServiceProxy
+{
+    public HttpClient HttpClient { get; protected set; }
+
+    public MyServiceProxy(HttpClient httpClient)
     {
-        public HttpClient HttpClient { get; protected set; }
-
-        public MyServiceProxy(HttpClient httpClient)
-        {
-            HttpClient = httpClient;
-        }
-        public async Task<MyServiceResponse> Execute( MyServiceRequest command)
-        {
-            var requestUri = $"https://postman-echo.com/get?foo1={command.Input}&foo2={command.Input}";
-            var r = await HttpClient.GetAsync(requestUri);
-            var content = await r.Content.ReadAsStringAsync();
-            return new MyServiceResponse() { Output = content };
-        }
+        HttpClient = httpClient;
     }
-''
-by overriding this proxy, you can inject a playback specific handler that will be able to record and replay outgoing calls by refering to the playback context and playbackstorage service
+    
+    public async Task<MyServiceResponse> Execute(MyServiceRequest command)
+    {
+        var requestUri = $"https://postman-echo.com/get?foo1={command.Input}&foo2={command.Input}";
+        var r = await HttpClient.GetAsync(requestUri);
+        var content = await r.Content.ReadAsStringAsync();
+        return new MyServiceResponse() { Output = content };
+    }
+}
+```
 
-```cs
+By overriding this proxy, you can inject a playback-specific handler that will be able to record and replay outgoing calls by referring to the playback context and playback storage service:
+
+```csharp
 public class MyPlaybackProxy : MyServiceProxy, IServiceProxy
-    {
-        private const string PROXY_NAME = "MyServiceProxy";
-        readonly IPlaybackContext _playbackContext;
-        readonly IPlaybackStorageService _playbackStorageService;
-        private readonly IHttpClientPlaybackErrorSimulationService _configService;
+{
+    private const string PROXY_NAME = "MyServiceProxy";
+    readonly IPlaybackContext _playbackContext;
+    readonly IPlaybackStorageService _playbackStorageService;
+    private readonly IHttpClientPlaybackErrorSimulationService _configService;
 
-        public MyPlaybackProxy(IPlaybackContext playbackContext, IPlaybackStorageService playbackStorageService, IHttpClientPlaybackErrorSimulationService configService) :
-            base(new System.Net.Http.HttpClient())
-        {
-            _playbackContext = playbackContext;
-            _playbackStorageService = playbackStorageService;
-            _configService = configService;
-            base.HttpClient = HttpClientFactory.WithPlaybackContext(playbackContext, playbackStorageService, PROXY_NAME, configService);
-        }
+    public MyPlaybackProxy(
+        IPlaybackContext playbackContext, 
+        IPlaybackStorageService playbackStorageService, 
+        IHttpClientPlaybackErrorSimulationService configService) 
+        : base(new HttpClient())
+    {
+        _playbackContext = playbackContext;
+        _playbackStorageService = playbackStorageService;
+        _configService = configService;
+        base.HttpClient = HttpClientFactory.WithPlaybackContext(
+            playbackContext, 
+            playbackStorageService, 
+            PROXY_NAME, 
+            configService);
     }
-''
+}
+```
+
+## Migration from .NET 6 to .NET 9
+
+This library has been modernized to .NET 9 with the following changes:
+- Upgraded from WindowsAzure.Storage to Azure.Storage.Blobs (v12+)
+- Removed obsolete API usage
+- Fixed nullable reference type warnings
+- Improved error handling
+
+If you're upgrading from an older version, ensure your Azure Storage connection strings are compatible with the new Azure.Storage.Blobs SDK.
  
 
 
