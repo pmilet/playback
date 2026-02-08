@@ -1,5 +1,9 @@
 # ASP.NET Core Playback
 
+> **⚠️ ALPHA VERSION WARNING**
+> 
+> This is an alpha version of the library. It is under active development and may contain bugs or incomplete features. The API is subject to change without notice. Use in production environments is not recommended.
+
 An ASP.NET Core middleware library for recording and replaying HTTP requests (inbound and outbound).
 
 ## Requirements
