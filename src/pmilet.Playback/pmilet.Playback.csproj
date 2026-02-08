@@ -13,7 +13,7 @@
 		<Product>pmilet.Playback</Product>
 		<Description>An ASP.NET Core middleware library for recording and replaying HTTP requests. ⚠️ ALPHA VERSION - This is an alpha release. API may change without notice. Not recommended for production use.</Description>
 		<PackageProjectUrl>https://github.com/pmilet/playback</PackageProjectUrl>
-		<PackageLicenseUrl>https://github.com/pmilet/playback/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/pmilet/playback</RepositoryUrl>
 		<PackageTags>AspNetCore;Http;Playback;Replay;Testing;Alpha</PackageTags>
 		<PackageReleaseNotes>⚠️ ALPHA VERSION: Modernized for .NET 9.0. Upgraded to Azure.Storage.Blobs. API is subject to change.</PackageReleaseNotes>
