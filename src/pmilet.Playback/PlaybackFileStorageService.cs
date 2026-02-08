@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace pmilet.Playback
 {
+    /// <summary>
+    /// Provides file system-based storage for playback messages.
+    /// </summary>
     public class PlaybackFileStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private string _storagePath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaybackFileStorageService"/> class.
+        /// </summary>
+        /// <param name="storagePath">The directory path where playback files will be stored.</param>
         public PlaybackFileStorageService(string storagePath)
         {
             _storagePath = storagePath;

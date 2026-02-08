@@ -12,20 +12,38 @@ using Newtonsoft.Json;
 
 namespace pmilet.Playback
 {
+    /// <summary>
+    /// Provides Azure Blob Storage-based storage for playback messages.
+    /// </summary>
     public class PlaybackBlobStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private string _containerName = "playback";
         private readonly string _connectionString = "DefaultEndpointsProtocol = https; AccountName=XXXXXXXXX;AccountKey=XXXXXXXXX;EndpointSuffix=core.windows.net";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaybackBlobStorageService"/> class.
+        /// </summary>
+        /// <param name="blobStorageConnectionString">The Azure Storage connection string.</param>
+        /// <param name="blobStorageContainerName">The blob container name.</param>
         public PlaybackBlobStorageService(string blobStorageConnectionString, string blobStorageContainerName)
         {
             _connectionString = blobStorageConnectionString;
             _containerName = blobStorageContainerName;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaybackBlobStorageService"/> class from configuration root.
+        /// </summary>
+        /// <param name="configuration">The configuration root.</param>
         public PlaybackBlobStorageService(IConfigurationRoot configuration) : this((IConfiguration)configuration)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaybackBlobStorageService"/> class from configuration.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <exception cref="ArgumentNullException">Thrown when required configuration is missing.</exception>
         public PlaybackBlobStorageService(IConfiguration configuration)
         {
             _connectionString = configuration.GetSection("PlaybackStorage").GetSection("ConnectionString").Value 
