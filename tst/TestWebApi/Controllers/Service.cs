@@ -6,12 +6,12 @@ namespace TestWebApi.Controllers
 {
     public class MyServiceRequest
     {
-        public string Input { get; set; }
+        public string Input { get; set; } = string.Empty;
     }
 
     public class MyServiceResponse
     {
-        public string Output { get; set; }
+        public string Output { get; set; } = string.Empty;
     }
 
     public class Service : IService

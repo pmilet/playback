@@ -1,30 +1,32 @@
 ﻿using pmilet.Playback.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace pmilet.Playback
 {
+    /// <summary>
+    /// Provides file system-based storage for playback messages.
+    /// </summary>
     public class PlaybackFileStorageService : PlaybackStorageServiceBase, IPlaybackStorageService
     {
         private string _storagePath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaybackFileStorageService"/> class.
+        /// </summary>
+        /// <param name="storagePath">The directory path where playback files will be stored.</param>
         public PlaybackFileStorageService(string storagePath)
         {
             _storagePath = storagePath;
-            CreateDirecotyIfNotExists(storagePath);
+            CreateDirectoryIfNotExists(storagePath);
         }
 
-        private static void CreateDirecotyIfNotExists(string path)
+        private static void CreateDirectoryIfNotExists(string path)
         {
             var directory = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directory))
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
@@ -33,20 +35,20 @@ namespace pmilet.Playback
 
         public override Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
         {
-            string path = $"{_storagePath}\\{playbackId}";
+            string path = Path.Combine(_storagePath, playbackId);
             try
             {
                 string bodyString = File.ReadAllText(path);
-                var playbackMessage = Task.FromResult(JsonConvert.DeserializeObject<PlaybackMessage>(bodyString));
+                var playbackMessage = JsonConvert.DeserializeObject<PlaybackMessage>(bodyString);
 
-                if (playbackMessage.Result.BodyString != null)
-                    return playbackMessage;
+                if (playbackMessage?.BodyString != null)
+                    return Task.FromResult(playbackMessage);
 
-                return Task.FromResult(new PlaybackMessage(path, string.Empty, bodyString, "text", 0));                
+                return Task.FromResult(new PlaybackMessage(path, string.Empty, bodyString, "text", 0));
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new PlaybackMessage(path, string.Empty, null, "text", 0));
+                throw new PlaybackStorageException(playbackId, "playback download error", ex);
             }
         }
 
@@ -58,7 +60,7 @@ namespace pmilet.Playback
             try
             {
                 var content = JsonConvert.SerializeObject(playbackMessage);
-                File.WriteAllText($"{_storagePath}\\{playbackId}", content);
+                File.WriteAllText(Path.Combine(_storagePath, playbackId), content);
                 return Task.CompletedTask;
             }
             catch (Exception ex)

@@ -11,15 +11,31 @@ using System.IO;
 
 namespace pmilet.Playback
 {
+    /// <summary>
+    /// Extension methods for configuring playback functionality.
+    /// </summary>
     public static class PlaybackExtension
     {
+        /// <summary>
+        /// Storage type options for playback messages.
+        /// </summary>
         public enum PlaybackStorageType { Blob, File }
 
+        /// <summary>
+        /// Determines if the playback context is in a playback mode.
+        /// </summary>
+        /// <param name="playbackContext">The playback context to check.</param>
+        /// <returns>True if in playback mode; otherwise, false.</returns>
         public static bool IsPlayback(this IPlaybackContext playbackContext)
         {
             return IsPlayback(playbackContext.PlaybackMode);
         }
 
+        /// <summary>
+        /// Determines if the specified playback mode is a playback mode.
+        /// </summary>
+        /// <param name="playbackMode">The playback mode to check.</param>
+        /// <returns>True if it's a playback mode; otherwise, false.</returns>
         public static bool IsPlayback(this PlaybackMode playbackMode)
         {
             return (playbackMode == PlaybackMode.Playback || playbackMode == PlaybackMode.PlaybackReal || playbackMode == PlaybackMode.PlaybackChaos);
@@ -29,15 +45,19 @@ namespace pmilet.Playback
         {
             get
             {
-                var codeBase = Assembly.GetCallingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                var path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                var location = Assembly.GetCallingAssembly().Location;
+                return Path.GetDirectoryName(location) ?? Directory.GetCurrentDirectory();
             }
         }
 
+        /// <summary>
+        /// Adds playback services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection to add services to.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="playbackStorageService">Optional custom storage service. If null, creates based on configuration.</param>
         public static void AddPlayback(this IServiceCollection services, IConfiguration configuration,
-            IPlaybackStorageService playbackStorageService = null)
+            IPlaybackStorageService? playbackStorageService = null)
         {
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
@@ -45,8 +65,8 @@ namespace pmilet.Playback
             {
                 if (configuration.GetSection("PlaybackStorage")?.GetValue<string>("ConnectionString")?.ToLower() == "local")
                 {
-                    string name = configuration.GetSection("PlaybackStorage").GetValue<string>("ContainerName");
-                    playbackStorageService = new PlaybackFileStorageService($"{AssemblyLoadDirectory}\\{name}\\");
+                    string name = configuration.GetSection("PlaybackStorage").GetValue<string>("ContainerName") ?? "PlaybackFiles";
+                    playbackStorageService = new PlaybackFileStorageService(Path.Combine(AssemblyLoadDirectory, name));
                 }
                 else
                 {
@@ -56,11 +76,22 @@ namespace pmilet.Playback
             services.AddScoped<IPlaybackStorageService>(provider => playbackStorageService);
         }
 
+        /// <summary>
+        /// Adds the playback middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <returns>The application builder for chaining.</returns>
         public static IApplicationBuilder UsePlayback(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<PlaybackMiddleware>();
         }
 
+        /// <summary>
+        /// Adds the playback middleware to the application pipeline with a default mode.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="defaultMode">The default playback mode to use.</param>
+        /// <returns>The application builder for chaining.</returns>
         public static IApplicationBuilder UsePlayback(this IApplicationBuilder builder, PlaybackMode defaultMode)
         {
             PlaybackContext.DefaultPlaybackMode = defaultMode;
