@@ -10,8 +10,8 @@ namespace pmilet.Playback.Core
     {
         string PlaybackId { get; }
         PlaybackMode PlaybackMode { get; }
-        Task RecordResult<T>(T result, string fileNameOverride = null);
-        Task<T> PlaybackResult<T>(string fileNameOverride = null);
+        Task RecordResult<T>(T result, string? fileNameOverride = null);
+        Task<T> PlaybackResult<T>(string? fileNameOverride = null);
         bool IsPlayback { get; }
         bool IsRecord { get; }
 

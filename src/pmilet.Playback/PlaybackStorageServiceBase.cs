@@ -25,13 +25,19 @@ namespace pmilet.Playback
         public async Task<T> ReplayFromStorageAsync<T>(string playbackId)
         {
             var message = await DownloadFromStorageAsync(playbackId);
-            return JsonConvert.DeserializeObject<T>(message.BodyString);
+            var result = JsonConvert.DeserializeObject<T>(message.BodyString);
+            if (result == null)
+                throw new PlaybackStorageException(playbackId, "Failed to deserialize playback message");
+            return result;
         }
 
         public async Task<T> ReplayFromStorageAsync<T>(PlaybackMode playbackMode, string playbackId)
         {
             string value = await ReplayFromStorageAsync(playbackMode, playbackId);
-            return JsonConvert.DeserializeObject<T>(value);
+            var result = JsonConvert.DeserializeObject<T>(value);
+            if (result == null)
+                throw new PlaybackStorageException(playbackId, "Failed to deserialize playback message");
+            return result;
         }
 
         public async Task<string> ReplayFromStorageAsync(PlaybackMode playbackMode, string playbackId)

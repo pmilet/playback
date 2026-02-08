@@ -14,7 +14,7 @@ namespace pmilet.Playback
     {
         private static string _assemblyName = System.Reflection.Assembly.GetEntryAssembly()?.GetName()?.Name ?? string.Empty;
 
-        private HttpContext _context;
+        private HttpContext? _context;
 
         private string _playbackId = string.Empty;
 
@@ -27,12 +27,16 @@ namespace pmilet.Playback
         public PlaybackContext(IHttpContextAccessor accessor, IPlaybackStorageService playbackStorageService)
         {
             if (accessor == null)
-                throw new Exception("null Http Context accessor when creating Playback Context");
+                throw new ArgumentNullException(nameof(accessor), "null Http Context accessor when creating Playback Context");
 
             if (accessor.HttpContext != null)
                 ReadHttpContext(accessor.HttpContext);
 
             _playbackStorageService = playbackStorageService;
+            
+            // Initialize required properties with default values
+            Version = string.Empty;
+            RequestContextInfo = DefaultPlaybackRequestContext ?? string.Empty;
         }
 
         public static void ChangePlaybackMode(PlaybackMode newPlaybackMode)
@@ -47,17 +51,17 @@ namespace pmilet.Playback
             PlaybackEventSource.Current.PlaybackRequestContextChanged(newRequestPlaybackContext);
         }
 
-        public static void ChangePlaybackFake(string newPlaybackFake)
+        public static void ChangePlaybackFake(string? newPlaybackFake)
         {
-            DefaultPlaybackFake = newPlaybackFake ?? string.Empty; ;
-            PlaybackEventSource.Current.PlaybackFakeChanged(newPlaybackFake);
+            DefaultPlaybackFake = newPlaybackFake ?? string.Empty;
+            PlaybackEventSource.Current.PlaybackFakeChanged(newPlaybackFake ?? string.Empty);
         }
 
-        public static string DefaultPlaybackRequestContext { get; set; }
+        public static string DefaultPlaybackRequestContext { get; set; } = string.Empty;
 
         public static PlaybackMode DefaultPlaybackMode { get; internal set; }
 
-        public static string DefaultPlaybackFake { get; internal set; }
+        public static string DefaultPlaybackFake { get; internal set; } = string.Empty;
 
         public string PlaybackId
         {
@@ -89,16 +93,16 @@ PlaybackMode == PlaybackMode.PlaybackReal;
 
         private string DefaultFileName<T>() { return PlaybackId + "_" + typeof(T).Name; }
 
-        public async Task RecordResult<T>(T result, string fileNameOverride = null)
+        public async Task RecordResult<T>(T result, string? fileNameOverride = null)
         {
-            string fileName = fileNameOverride == null ? DefaultFileName<T>() : fileNameOverride;
+            string fileName = fileNameOverride ?? DefaultFileName<T>();
             var body = Newtonsoft.Json.JsonConvert.SerializeObject(result);
             await _playbackStorageService.UploadToStorageAsync(fileName, body);
         }
 
-        public async Task<T> PlaybackResult<T>(string fileNameOverride = null)
+        public async Task<T> PlaybackResult<T>(string? fileNameOverride = null)
         {
-            string fileName = fileNameOverride == null ? DefaultFileName<T>() : fileNameOverride;
+            string fileName = fileNameOverride ?? DefaultFileName<T>();
             return await _playbackStorageService.ReplayFromStorageAsync<T>(PlaybackMode, fileName);
         }
 
@@ -109,7 +113,7 @@ PlaybackMode == PlaybackMode.PlaybackReal;
             Microsoft.Extensions.Primitives.StringValues headerValues;
 
             var keyfound = context.Request.Headers.TryGetValue("X-Playback-RequestContext", out headerValues);
-            RequestContextInfo = keyfound ? RequestContextInfo = headerValues.FirstOrDefault() : DefaultPlaybackRequestContext;
+            RequestContextInfo = keyfound ? headerValues.FirstOrDefault() ?? DefaultPlaybackRequestContext : DefaultPlaybackRequestContext;
 
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Mode", out headerValues);
             PlaybackMode pbm = PlaybackMode.None;
@@ -120,16 +124,16 @@ PlaybackMode == PlaybackMode.PlaybackReal;
             }
 
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Version", out headerValues);
-            Version = keyfound ? headerValues.FirstOrDefault() : string.Empty;
+            Version = keyfound ? headerValues.FirstOrDefault() ?? string.Empty : string.Empty;
 
             keyfound = _context.Request.Headers.TryGetValue("X-Playback-Id", out headerValues);
-            PlaybackId = keyfound ? headerValues.FirstOrDefault() : string.Empty;
+            PlaybackId = keyfound ? headerValues.FirstOrDefault() ?? string.Empty : string.Empty;
         }
 
         internal string GenerateNewPlaybackId()
         {
             if (_context == null)
-                throw new Exception("null HttpContext when generating new playback Id");
+                throw new InvalidOperationException("null HttpContext when generating new playback Id");
 
             _context.Request.EnableBuffering();
             _requestBodyString = ReadToEnd(_context.Request.Body);
@@ -151,12 +155,12 @@ PlaybackMode == PlaybackMode.PlaybackReal;
 
         private string RequestMethod
         {
-            get { return _context.Request.Method; }
+            get { return _context?.Request.Method ?? string.Empty; }
         }
 
         private string RequestPath
         {
-            get { return WebUtility.UrlEncode(_context.Request.Path.Value.Replace("api", "").Trim('/')); }
+            get { return WebUtility.UrlEncode(_context?.Request.Path.Value?.Replace("api", "").Trim('/') ?? string.Empty); }
         }
 
         private string Version
@@ -183,8 +187,8 @@ PlaybackMode == PlaybackMode.PlaybackReal;
             get
             {
                 if (string.IsNullOrEmpty(_queryString))
-                    _queryString = _context.Request.QueryString.HasValue ? _context.Request.QueryString.Value : string.Empty;
-                return _requestBodyString;
+                    _queryString = _context?.Request.QueryString.HasValue == true ? _context.Request.QueryString.Value : string.Empty;
+                return _queryString;
             }
         }
 

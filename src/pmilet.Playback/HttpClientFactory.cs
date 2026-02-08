@@ -48,17 +48,15 @@ namespace pmilet.Playback
 
             if (_playbackContext.PlaybackMode == PlaybackMode.Record)
             {
-                string content = request.Content !=null? await request.Content.ReadAsStringAsync() : string.Empty;
+                string content = request.Content != null ? await request.Content.ReadAsStringAsync(cancellationToken) : string.Empty;
                 string playbackId = $"{_handlerName}Req{_requestNumber}{_playbackContext.PlaybackId}";
                 await _playbackStorageService.UploadToStorageAsync(playbackId, content);
             }
 
-            HttpResponseMessage replayedResponse = null;
-
             if (_playbackContext.IsPlayback())
             {
                 string playbackId = $"{_handlerName}Resp{_requestNumber}{_playbackContext.PlaybackId}";
-                return replayedResponse = await Replay(playbackId);
+                return await Replay(playbackId);
             }
 
             var freshResponse = await base.SendAsync(request, cancellationToken);
@@ -80,11 +78,11 @@ namespace pmilet.Playback
         private async Task<HttpResponseMessage> Replay(string playbackId)
         {
             var m = await _playbackStorageService.DownloadFromStorageAsync(playbackId);
-            string content = m.BodyString;
+            string? content = m.BodyString;
             var savedResponse = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
             if (content == null)
             {
-                return null;
+                throw new PlaybackStorageException(playbackId, "No content found for playback");
             }
             savedResponse.Content = new StringContent(content);
             return savedResponse;

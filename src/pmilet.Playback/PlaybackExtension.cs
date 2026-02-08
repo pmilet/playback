@@ -29,15 +29,13 @@ namespace pmilet.Playback
         {
             get
             {
-                var codeBase = Assembly.GetCallingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                var path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                var location = Assembly.GetCallingAssembly().Location;
+                return Path.GetDirectoryName(location) ?? Directory.GetCurrentDirectory();
             }
         }
 
         public static void AddPlayback(this IServiceCollection services, IConfiguration configuration,
-            IPlaybackStorageService playbackStorageService = null)
+            IPlaybackStorageService? playbackStorageService = null)
         {
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPlaybackContext, PlaybackContext>();
@@ -45,8 +43,8 @@ namespace pmilet.Playback
             {
                 if (configuration.GetSection("PlaybackStorage")?.GetValue<string>("ConnectionString")?.ToLower() == "local")
                 {
-                    string name = configuration.GetSection("PlaybackStorage").GetValue<string>("ContainerName");
-                    playbackStorageService = new PlaybackFileStorageService($"{AssemblyLoadDirectory}\\{name}\\");
+                    string name = configuration.GetSection("PlaybackStorage").GetValue<string>("ContainerName") ?? "PlaybackFiles";
+                    playbackStorageService = new PlaybackFileStorageService(Path.Combine(AssemblyLoadDirectory, name));
                 }
                 else
                 {

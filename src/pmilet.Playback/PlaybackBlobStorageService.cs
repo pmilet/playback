@@ -3,13 +3,10 @@
 using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using System.Collections.Generic;
 using pmilet.Playback.Core;
 using Newtonsoft.Json;
 
@@ -31,36 +28,42 @@ namespace pmilet.Playback
 
         public PlaybackBlobStorageService(IConfiguration configuration)
         {
-            _connectionString = configuration.GetSection("PlaybackStorage").GetSection("ConnectionString").Value;
-            _containerName = configuration.GetSection("PlaybackStorage").GetSection("ContainerName").Value;
+            _connectionString = configuration.GetSection("PlaybackStorage").GetSection("ConnectionString").Value 
+                ?? throw new ArgumentNullException(nameof(configuration), "PlaybackStorage:ConnectionString is required");
+            _containerName = configuration.GetSection("PlaybackStorage").GetSection("ContainerName").Value 
+                ?? throw new ArgumentNullException(nameof(configuration), "PlaybackStorage:ContainerName is required");
         }
 
         public async override Task UploadToStorageAsync(string playbackId, string path, string queryString, string bodyString, long elapsedTime = 0)
         {
             if (string.IsNullOrWhiteSpace(playbackId))
                 throw new PlaybackStorageException(playbackId, "playbackId not found");
+            
             PlaybackMessage playbackMessage = new PlaybackMessage(path, queryString, bodyString, "text", elapsedTime);
+            
             try
             {
-                // Retrieve storage account from connection string.
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_connectionString);
+                // Create BlobServiceClient from connection string
+                var blobServiceClient = new BlobServiceClient(_connectionString);
+                
+                // Get container reference and create if not exists
+                var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
+                await containerClient.CreateIfNotExistsAsync();
 
-                // Create the blob client.
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-
-                // Retrieve reference to a previously created container.
-                CloudBlobContainer container = blobClient.GetContainerReference(_containerName);
-
-                // Create the container if it doesn't already exist.
-                await container.CreateIfNotExistsAsync();
-
-                // Retrieve reference to a blob.
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
-
-                await blockBlob.UploadTextAsync(JsonConvert.SerializeObject(playbackMessage));
-                foreach (string key in playbackMessage.Metadata.Keys)
-                    blockBlob.Metadata.Add(key, playbackMessage.Metadata[key]);
-                await blockBlob.SetMetadataAsync();
+                // Get blob reference and upload content
+                var blobClient = containerClient.GetBlobClient(playbackId);
+                
+                string content = JsonConvert.SerializeObject(playbackMessage);
+                using var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+                
+                // Upload with metadata
+                var metadata = new Dictionary<string, string>(playbackMessage.Metadata);
+                var options = new BlobUploadOptions
+                {
+                    Metadata = metadata
+                };
+                
+                await blobClient.UploadAsync(stream, options);
             }
             catch (Exception ex)
             {
@@ -71,36 +74,48 @@ namespace pmilet.Playback
 
         public async override Task<PlaybackMessage> DownloadFromStorageAsync(string playbackId)
         {
-            string contentType;
-            string bodyString;
-
             try
             {
-                // Retrieve storage account from connection string.
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_connectionString);
-
-                // Create the blob client.
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-
-                // Retrieve reference to a previously created container.
-                CloudBlobContainer container = blobClient.GetContainerReference(_containerName);
-
-                string text = string.Empty;
-                if (!await container.ExistsAsync()) return null;
-
-                // Retrieve reference to a blob named "photo1.jpg".
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(playbackId);
-
-                using (var memoryStream = new MemoryStream())
+                // Create BlobServiceClient from connection string
+                var blobServiceClient = new BlobServiceClient(_connectionString);
+                
+                // Get container reference
+                var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
+                
+                // Check if container exists
+                if (!await containerClient.ExistsAsync())
                 {
-                    await blockBlob.DownloadToStreamAsync(memoryStream);
-                    bodyString = Encoding.UTF8.GetString(memoryStream.ToArray());
+                    throw new PlaybackStorageException(playbackId, "Container does not exist");
                 }
-                return JsonConvert.DeserializeObject<PlaybackMessage>(bodyString);
+
+                // Get blob reference and download
+                var blobClient = containerClient.GetBlobClient(playbackId);
+                
+                if (!await blobClient.ExistsAsync())
+                {
+                    throw new PlaybackStorageException(playbackId, "Playback blob not found");
+                }
+
+                using var memoryStream = new MemoryStream();
+                await blobClient.DownloadToAsync(memoryStream);
+                
+                string bodyString = Encoding.UTF8.GetString(memoryStream.ToArray());
+                var result = JsonConvert.DeserializeObject<PlaybackMessage>(bodyString);
+                
+                if (result == null)
+                {
+                    throw new PlaybackStorageException(playbackId, "Failed to deserialize playback message");
+                }
+                
+                return result;
+            }
+            catch (PlaybackStorageException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(new PlaybackMessage(_containerName, string.Empty, null, "text", 0));
+                throw new PlaybackStorageException(playbackId, "playback download error", ex);
             }
         }
 
