@@ -6,7 +6,7 @@
     <title>pmilet http Playback (Alpha)</title>
     <authors>Pierre Milet</authors>
     <owners>Pierre Milet</owners>
-    <licenseUrl>https://github.com/pmilet/playback/blob/master/LICENSE</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/pmilet/playback</projectUrl>
     <iconUrl>https://avatars2.githubusercontent.com/u/18263595</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
